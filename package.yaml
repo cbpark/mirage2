@@ -1,0 +1,17 @@
+name:         mirage2
+version:      "0.0.0.0"
+author:       Chan Beom Park
+maintainer:   cbpark@gmail.com
+license-file: LICENSE
+github:       cbpark/mirage2
+category:     Physics
+
+ghc-options:  -Wall -Wcompat -O2 -funbox-strict-fields
+
+dependencies:
+  - base >= 4.12.0.0 && < 5
+
+executables:
+  mirage2:
+    main: mirage2.hs
+    source-dirs: src
