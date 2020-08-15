@@ -1,17 +1,24 @@
-name:         mirage2
-version:      "0.0.0.0"
-author:       Chan Beom Park
-maintainer:   cbpark@gmail.com
-license-file: LICENSE
-github:       cbpark/mirage2
-category:     Physics
+name:               mirage2
+version:            "0.0.0.0"
+author:             Chan Beom Park
+maintainer:         cbpark@gmail.com
+license-file:       LICENSE
+github:             cbpark/mirage2
+category:           Physics
+extra-source-files: csrc/*
 
 ghc-options:  -Wall -Wcompat -O2 -funbox-strict-fields
 
 dependencies:
   - base >= 4.12.0.0 && < 5
 
+extra-libraries:
+  - LHAPDF
+  - stdc++
+
 executables:
   mirage2:
     main: mirage2.hs
     source-dirs: src
+    cxx-sources: csrc/alphas.cc
+    cxx-options: -g -O2 -m64 -Wall -Wextra -pedantic -fPIC

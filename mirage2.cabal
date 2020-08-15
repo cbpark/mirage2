@@ -1,10 +1,10 @@
-cabal-version: 1.12
+cabal-version: 2.2
 
 -- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aadf017d79e656e99da13cb785f47f062abad44b3759b82b8ac3ca6743a42d70
+-- hash: a1d6f5255c4d80adb0a9d1d5a5f85515f6cfc2533442f7d5a86adde8d3ea88dd
 
 name:           mirage2
 version:        0.0.0.0
@@ -13,9 +13,12 @@ homepage:       https://github.com/cbpark/mirage2#readme
 bug-reports:    https://github.com/cbpark/mirage2/issues
 author:         Chan Beom Park
 maintainer:     cbpark@gmail.com
-license:        BSD3
+license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
+extra-source-files:
+    csrc/alphas.cc
+    csrc/alphas.h
 
 source-repository head
   type: git
@@ -24,10 +27,19 @@ source-repository head
 executable mirage2
   main-is: mirage2.hs
   other-modules:
+      HEP.Data.AlphaS
+      HEP.Data.Constants
+      HEP.Data.Kinematics
       Paths_mirage2
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  cxx-options: -g -O2 -m64 -Wall -Wextra -pedantic -fPIC
+  cxx-sources:
+      csrc/alphas.cc
+  extra-libraries:
+      LHAPDF
+      stdc++
   build-depends:
       base >=4.12.0.0 && <5
   default-language: Haskell2010
