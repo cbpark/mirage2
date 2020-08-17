@@ -1,19 +1,16 @@
 module Main where
 
-import HEP.Data.AlphaS
-import HEP.Data.Constants
-import HEP.Data.Kinematics
-import HEP.Data.Quark
+import HEP.Data.AlphaS    (alphasQ, initAlphaS)
+import HEP.Data.Constants (mt)
+import HEP.Data.Quark     (mMSbarHeavy)
 import HEP.Data.SUSY
 
 main :: IO ()
 main = do
     alphaS <- initAlphaS
-    a3 <- alphasQ mhSM alphaS
-    print a3
 
     let tanb = 10.0
-        m0 = 3000.0
+        m0 = 2230.0
 
     let mu = getMu point1 1000.0 m0
     putStrLn $ "mu = " ++ show mu
@@ -26,12 +23,18 @@ main = do
     let mSUSY = getMSUSY point1 tanb m0 mu
     putStrLn $ "mSUSY = " ++ show mSUSY
 
-    (mtMS,    _, _) <- mMSbarHeavy alphaS (getMass mt)
-    (   _, mbMS, _) <- mMSbarHeavy alphaS (getMass mtMS)
+    (mtMS,    _, _) <- mMSbarHeavy alphaS mt
+    (   _, mbMS, _) <- mMSbarHeavy alphaS mtMS
     print (mtMS, mbMS)
+
+    a3 <- alphasQ mtMS alphaS
+    print a3
 
     let mh = mHiggs point1 (mtMS, mbMS) a3 mu tanb m0
     print mh
+
+    let m0sol = getM0Sol point1 (mtMS, mbMS) a3 mu (5.0e+2, 5.0e+4) 6.9
+    putStrLn $ "m0sol = " ++ show m0sol
 
 point1 :: ModularWeights
 point1 = ModularWeights { _cHu = 0.0

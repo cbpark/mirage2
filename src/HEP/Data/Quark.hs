@@ -57,8 +57,8 @@ mMSbar as scale q = do
                         [Just c0, Just c1] -> mqMS * c1 / c0
                         _                  -> 0
 
-mMSbarHeavy :: MonadIO m => AlphaS -> Double -> m (Mass, Mass, Mass)
-mMSbarHeavy as scale = do
+mMSbarHeavy :: MonadIO m => AlphaS -> Mass -> m (Mass, Mass, Mass)
+mMSbarHeavy as (Mass scale) = do
     mtMS <- mMSbar as scale Top
     mbMS <- mMSbar as scale Bottom
     mcMS <- mMSbar as scale Charm

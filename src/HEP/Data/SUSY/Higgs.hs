@@ -1,11 +1,16 @@
+{-# LANGUAGE BangPatterns    #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module HEP.Data.SUSY.Higgs where
 
-import HEP.Data.Constants       (mZ2, mtau, pi2, vEW, vEW2)
+import HEP.Data.Constants       (mZ2, mhSM, mtau, pi2, vEW, vEW2)
 import HEP.Data.Kinematics      (Mass (..), massSq)
 import HEP.Data.SUSY.Parameters
 import HEP.Data.SUSY.Squark     (getMSUSY)
+
+import Numeric.RootFinding
+
+import Debug.Trace
 
 getMu :: ModularWeights
       -> Double  -- ^ m_*
@@ -20,12 +25,12 @@ mHiggs :: ModularWeights
        -> Double        -- ^ mu
        -> Double        -- ^ tan(beta)
        -> Double        -- ^ M_0
-       -> Maybe Mass
+       -> Double
 mHiggs cs@ModularWeights {..} (mtMS, mbMS) as mu tanb m0
-    | mhSq <= 0 = Nothing
-    | otherwise = Just $ Mass (sqrt mhSq)
+    | mhSq <= 0 = 0
+    | otherwise = sqrt mhSq
   where
-    mhSq = mZ2 * cos2b * cos2b
+    mhSq = mZ2 * cos2b * cos2b -- * (1.0 - 3 * loopFac * 2 * mt2 / vEW2 * loopT)
            + 3.0 / (4 * pi2) * mt2 * mt2 / vEW2 * termT
            - yb2 * yb2 * vEW2 * loopFac * termB
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau
@@ -61,3 +66,31 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as mu tanb m0
     ytau2 = ytau * ytau
     mStau = m0 * _cL
     termTau = mu4 / mStau ** 4
+
+mHiggsFunc :: ModularWeights
+           -> (Mass, Mass)  -- ^ (mtMS, mbMS)
+           -> Double        -- ^ alpha_s
+           -> Double        -- ^ mu
+           -> Double        -- ^ tan(beta)
+           -> (Double -> Double)
+mHiggsFunc cs (mtMS, mbMS) as mu tanb m0 =
+    mHiggs cs (mtMS, mbMS) as mu tanb m0 - getMass mhSM
+
+getM0Sol :: ModularWeights
+         -> (Mass, Mass)      -- ^ (mtMS, mbMS)
+         -> Double            -- ^ alpha_s
+         -> Double            -- ^ mu
+         -> (Double, Double)  -- ^ (low, upper)
+         -> Double            -- ^ tan(beta)
+         -> Maybe Double
+getM0Sol cs (mtMS, mbMS) as mu (xlow, xupper) tanb = do
+    let mhFunc = mHiggsFunc cs (mtMS, mbMS) as mu tanb
+        !xupper' = traceId ("xupper = " ++ show xupper)
+    if xupper <= xlow
+        then Nothing
+        else do let param = RiddersParam 1000 (AbsTol 1.0e-3)
+                case ridders param (xlow, xupper) mhFunc of
+                    Root m0      -> return m0
+                    NotBracketed -> getM0Sol cs (mtMS, mbMS) as mu
+                                    (xlow, xupper * 0.95) tanb
+                    _            -> Nothing
