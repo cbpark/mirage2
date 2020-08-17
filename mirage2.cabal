@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b6b1e1d9bcca79e352672e413534442a0c750874502d0411ffbcd15be0b74f50
+-- hash: af6af5c647cb79e8b2e9eda6a565fcd4375d65f0814751976cf02210d216ee30
 
 name:           mirage2
 version:        0.0.0.0
@@ -30,6 +30,7 @@ executable mirage2
       HEP.Data.AlphaS
       HEP.Data.Constants
       HEP.Data.Kinematics
+      HEP.Data.Quark
       HEP.Data.SUSY
       HEP.Data.SUSY.Higgs
       HEP.Data.SUSY.Parameters

@@ -1,6 +1,6 @@
 module HEP.Data.Kinematics where
 
-newtype Mass = Mass { getMass :: Double }
+newtype Mass = Mass { getMass :: Double } deriving (Eq, Ord)
 
 instance Show Mass where
     show = show . getMass
