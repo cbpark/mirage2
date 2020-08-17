@@ -19,11 +19,10 @@ getMu ModularWeights {..} mStar m0 =
 mHiggs :: ModularWeights
        -> (Mass, Mass)  -- ^ (mtMS, mbMS)
        -> Double        -- ^ alpha_s
-       -> Double        -- ^ mu
        -> Double        -- ^ tan(beta)
        -> Double        -- ^ M_0
        -> Double
-mHiggs cs@ModularWeights {..} (mtMS, mbMS) as mu tanb m0
+mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     | mhSq <= 0 = 0
     | otherwise = sqrt mhSq
   where
@@ -32,8 +31,10 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as mu tanb m0
            - yb2 * yb2 * vEW2 * loopFac * termB
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau
 
-    cos2b = cos2Beta tanb
+    [cos2b, cosb] = fmap ($ tanb) [cos2Beta, cosBeta]
     mt2 = massSq mtMS
+    mu = getMu cs 1.0e+3 m0
+    mu4 = mu ** 4
 
     mSUSY = getMSUSY cs tanb m0 mu
     mSUSY2 = mSUSY * mSUSY
@@ -47,9 +48,6 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as mu tanb m0
     termT = 0.5 * xT + loopT
             + loopFac * (1.5 * mt2 / vEW2 - 32 * pi * as)
             * (xT * loopT + loopT * loopT)
-
-    cosb = cosBeta tanb
-    mu4 = mu ** 4
 
     -- the contribution from sbottom
     yb = getMass mbMS / (vEW * cosb)
@@ -67,26 +65,24 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as mu tanb m0
 mHiggsFunc :: ModularWeights
            -> (Mass, Mass)  -- ^ (mtMS, mbMS)
            -> Double        -- ^ alpha_s
-           -> Double        -- ^ mu
            -> Double        -- ^ tan(beta)
            -> (Double -> Double)
-mHiggsFunc cs (mtMS, mbMS) as mu tanb m0 =
-    mHiggs cs (mtMS, mbMS) as mu tanb m0 - getMass mhSM
+mHiggsFunc cs (mtMS, mbMS) as tanb m0 =
+    mHiggs cs (mtMS, mbMS) as tanb m0 - getMass mhSM
 
 getM0Sol :: ModularWeights
          -> (Mass, Mass)      -- ^ (mtMS, mbMS)
          -> Double            -- ^ alpha_s
-         -> Double            -- ^ mu
          -> (Double, Double)  -- ^ (low, upper)
          -> Double            -- ^ tan(beta)
          -> Maybe Double
-getM0Sol cs (mtMS, mbMS) as mu (xlow, xupper) tanb = do
-    let mhFunc = mHiggsFunc cs (mtMS, mbMS) as mu tanb
+getM0Sol cs (mtMS, mbMS) as (xlow, xupper) tanb = do
+    let mhFunc = mHiggsFunc cs (mtMS, mbMS) as tanb
     if xupper <= xlow
         then Nothing
         else do let param = RiddersParam 1000 (AbsTol 1.0e-3)
                 case ridders param (xlow, xupper) mhFunc of
                     Root m0      -> return m0
-                    NotBracketed -> getM0Sol cs (mtMS, mbMS) as mu
+                    NotBracketed -> getM0Sol cs (mtMS, mbMS) as
                                     (xlow, xupper * 0.95) tanb
                     _            -> Nothing

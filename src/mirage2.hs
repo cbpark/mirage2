@@ -30,10 +30,10 @@ main = do
     a3 <- alphasQ mtMS alphaS
     print a3
 
-    let mh = mHiggs point1 (mtMS, mbMS) a3 mu tanb m0
+    let mh = mHiggs point1 (mtMS, mbMS) a3 tanb m0
     print mh
 
-    let m0sol = getM0Sol point1 (mtMS, mbMS) a3 mu (5.0e+2, 5.0e+4) 30
+    let m0sol = getM0Sol point1 (mtMS, mbMS) a3 (5.0e+2, 1.0e+4) 7
     putStrLn $ "m0sol = " ++ show m0sol
 
 point1 :: ModularWeights

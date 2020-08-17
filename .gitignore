@@ -12,3 +12,4 @@ stack.yaml.lock
 *.dat
 *.old
 *.gz
+*.dat

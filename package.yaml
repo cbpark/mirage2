@@ -31,7 +31,10 @@ executables:
   mhiggs:
     main: mhiggs.hs
     source-dirs: src
-    dependencies: mirage2
+    dependencies:
+      - optparse-generic
+      - vector
+      - mirage2
 
   mirage2:
     main: mirage2.hs
