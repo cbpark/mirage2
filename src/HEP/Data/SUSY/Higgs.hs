@@ -2,23 +2,26 @@
 
 module HEP.Data.SUSY.Higgs where
 
-import HEP.Data.Constants       (mZ2, pi2, vEW, vEW2, mtau)
+import HEP.Data.Constants       (mZ2, mtau, pi2, vEW, vEW2)
 import HEP.Data.Kinematics      (Mass (..), massSq)
 import HEP.Data.SUSY.Parameters
 import HEP.Data.SUSY.Squark     (getMSUSY)
 
-getMu :: ModelParams
+getMu :: ModularWeights
       -> Double  -- ^ m_*
+      -> Double  -- ^ M_0
       -> Double
-getMu ModelParams {..} mStar =
-    mStar * (mStar / _M0) ** (7.0 / 12) / _Hd _c ** (1.0 / 3)
+getMu ModularWeights {..} mStar m0 =
+    mStar * (mStar / m0) ** (7.0 / 12) / _cHd ** (1.0 / 3)
 
-mHiggs :: ModelParams
-       -> Double
+mHiggs :: ModularWeights
        -> (Mass, Mass)  -- ^ (mtMS, mbMS)
-       -> Double
+       -> Double        -- ^ alpha_s
+       -> Double        -- ^ mu
+       -> Double        -- ^ tan(beta)
+       -> Double        -- ^ M_0
        -> Maybe Mass
-mHiggs m@ModelParams {..} mu (mtMS, mbMS) as
+mHiggs cs@ModularWeights {..} (mtMS, mbMS) as mu tanb m0
     | mhSq <= 0 = Nothing
     | otherwise = Just $ Mass (sqrt mhSq)
   where
@@ -27,14 +30,14 @@ mHiggs m@ModelParams {..} mu (mtMS, mbMS) as
            - yb2 * yb2 * vEW2 * loopFac * termB
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau
 
-    cos2b = cos2Beta _tanb
+    cos2b = cos2Beta tanb
     mt2 = massSq mtMS
 
-    mSUSY = getMSUSY m mu
+    mSUSY = getMSUSY cs tanb m0 mu
     mSUSY2 = mSUSY * mSUSY
     loopT = log (mSUSY2 / mt2)
 
-    aT = _M0 - mu / _tanb
+    aT = m0 - mu / tanb
     aT2 = aT * aT
     xT = 2.0 * aT2 / mSUSY2 * (1.0 - aT2 / (12.0 * mSUSY2))
     loopFac = 1.0 / (16 * pi2)
@@ -43,7 +46,7 @@ mHiggs m@ModelParams {..} mu (mtMS, mbMS) as
             + loopFac * (1.5 * mt2 / vEW2 - 32 * pi * as)
             * (xT * loopT + loopT * loopT)
 
-    cosb = cosBeta _tanb
+    cosb = cosBeta tanb
     mu4 = mu ** 4
 
     -- the contribution from sbottom
@@ -56,5 +59,5 @@ mHiggs m@ModelParams {..} mu (mtMS, mbMS) as
     -- the contribution from stau
     ytau = getMass mtau / (vEW * cosb)
     ytau2 = ytau * ytau
-    mStau = _M0 * _L _c
+    mStau = m0 * _cL
     termTau = mu4 / mStau ** 4

@@ -12,32 +12,32 @@ main = do
     a3 <- alphasQ mhSM alphaS
     print a3
 
-    let mu = getMu point1 1000.0
+    let tanb = 10.0
+        m0 = 3000.0
+
+    let mu = getMu point1 1000.0 m0
     putStrLn $ "mu = " ++ show mu
 
-    let mtS = mStop point1 mu
+    let mtS = mStop point1 tanb m0 mu
+        mbS = mSbottom point1 tanb m0 mu
     putStrLn $ "mstop = " ++ show mtS
-
-    let mSUSY = getMSUSY point1 mu
-    putStrLn $ "mSUSY = " ++ show mSUSY
-
-    let mbS = mSbottom point1 mu
     putStrLn $ "msbottom = " ++ show mbS
+
+    let mSUSY = getMSUSY point1 tanb m0 mu
+    putStrLn $ "mSUSY = " ++ show mSUSY
 
     (mtMS,    _, _) <- mMSbarHeavy alphaS (getMass mt)
     (   _, mbMS, _) <- mMSbarHeavy alphaS (getMass mtMS)
     print (mtMS, mbMS)
-    let mh = mHiggs point1 mu (mtMS, mbMS) a3
+
+    let mh = mHiggs point1 (mtMS, mbMS) a3 mu tanb m0
     print mh
 
-point1 :: ModelParams
-point1 = ModelParams { _M0 = 2950.0
-                     , _c  = ModularWeights { _Hu = 0.0
-                                            , _Hd = 1.0
-                                            , _Q  = 0.5
-                                            , _tR = 0.5
-                                            , _bR = 0.5
-                                            , _L  = 0.5
-                                            , _eR = 0.5 }
-                     , _tanb = 10.0
-                     }
+point1 :: ModularWeights
+point1 = ModularWeights { _cHu = 0.0
+                        , _cHd = 1.0
+                        , _cQ  = 0.5
+                        , _ctR = 0.5
+                        , _cbR = 0.5
+                        , _cL  = 0.5
+                        , _ceR = 0.5 }
