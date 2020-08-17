@@ -38,12 +38,15 @@ mHiggs ModelParams {..} mu as | mhSq <= 0 = Nothing
             + (3.0 / 2 * mt2 / vEW2 - 32 * pi * as)
             * (xT * loopT + loopT * loopT) / (16.0 * pi2)
 
-cos2Beta :: Double -> Double
-cos2Beta tanb = (1.0 - tanbSq) / (1.0 + tanbSq)
-  where tanbSq = tanb * tanb
-
 getMu :: ModelParams
       -> Double  -- ^ m_*
       -> Double
 getMu ModelParams {..} mStar =
     mStar * (mStar / _M0) ** (7.0 / 12) / _Hd _c ** (1.0 / 3)
+
+cos2Beta :: Double -> Double
+cos2Beta tanb = (1.0 - tanbSq) / (1.0 + tanbSq)
+  where tanbSq = tanb * tanb
+
+cosBeta :: Double -> Double
+cosBeta tanb = 1.0 / sqrt (1 + tanb * tanb)
