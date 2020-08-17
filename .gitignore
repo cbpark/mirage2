@@ -9,6 +9,7 @@ stack.yaml.lock
 .stack-work
 *.prof
 *.html
+bin
 *.dat
 *.old
 *.gz
