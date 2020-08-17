@@ -33,7 +33,7 @@ main = do
     let mh = mHiggs point1 (mtMS, mbMS) a3 mu tanb m0
     print mh
 
-    let m0sol = getM0Sol point1 (mtMS, mbMS) a3 mu (5.0e+2, 5.0e+4) 6.9
+    let m0sol = getM0Sol point1 (mtMS, mbMS) a3 mu (5.0e+2, 5.0e+4) 30
     putStrLn $ "m0sol = " ++ show m0sol
 
 point1 :: ModularWeights

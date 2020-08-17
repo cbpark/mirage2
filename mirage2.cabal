@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6de0ef92182ff2a9ff5dd19aff5ba4bfc5c2c5e7d0f768b7432f13ef25cb8c82
+-- hash: 72b64afbd391b7282e8703ca51435dcd96c318bd22b16258fe165274266e13ec
 
 name:           mirage2
 version:        0.0.0.0
@@ -24,20 +24,20 @@ source-repository head
   type: git
   location: https://github.com/cbpark/mirage2
 
-executable mirage2
-  main-is: mirage2.hs
-  other-modules:
+library
+  exposed-modules:
       HEP.Data.AlphaS
       HEP.Data.Constants
       HEP.Data.Kinematics
-      HEP.Data.Quark
       HEP.Data.SUSY
+      HEP.Data.Quark
+  other-modules:
       HEP.Data.SUSY.Higgs
       HEP.Data.SUSY.Parameters
       HEP.Data.SUSY.Squark
       Paths_mirage2
   hs-source-dirs:
-      src
+      lib
   ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
   cxx-options: -g -O2 -m64 -Wall -Wextra -pedantic -fPIC
   cxx-sources:
@@ -48,4 +48,28 @@ executable mirage2
   build-depends:
       base >=4.12.0.0 && <5
     , math-functions
+  default-language: Haskell2010
+
+executable mhiggs
+  main-is: mhiggs.hs
+  other-modules:
+      Paths_mirage2
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  build-depends:
+      base >=4.12.0.0 && <5
+    , mirage2
+  default-language: Haskell2010
+
+executable mirage2
+  main-is: mirage2.hs
+  other-modules:
+      Paths_mirage2
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  build-depends:
+      base >=4.12.0.0 && <5
+    , mirage2
   default-language: Haskell2010

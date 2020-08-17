@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns    #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module HEP.Data.SUSY.Higgs where
@@ -9,8 +8,6 @@ import HEP.Data.SUSY.Parameters
 import HEP.Data.SUSY.Squark     (getMSUSY)
 
 import Numeric.RootFinding
-
-import Debug.Trace
 
 getMu :: ModularWeights
       -> Double  -- ^ m_*
@@ -85,7 +82,6 @@ getM0Sol :: ModularWeights
          -> Maybe Double
 getM0Sol cs (mtMS, mbMS) as mu (xlow, xupper) tanb = do
     let mhFunc = mHiggsFunc cs (mtMS, mbMS) as mu tanb
-        !xupper' = traceId ("xupper = " ++ show xupper)
     if xupper <= xlow
         then Nothing
         else do let param = RiddersParam 1000 (AbsTol 1.0e-3)

@@ -7,19 +7,33 @@ github:             cbpark/mirage2
 category:           Physics
 extra-source-files: csrc/*
 
-ghc-options:  -Wall -Wcompat -O2 -funbox-strict-fields
+ghc-options:        -Wall -Wcompat -O2 -funbox-strict-fields
 
 dependencies:
   - base >= 4.12.0.0 && < 5
-  - math-functions
 
-extra-libraries:
-  - LHAPDF
-  - stdc++
+library:
+  exposed-modules:
+    - HEP.Data.AlphaS
+    - HEP.Data.Constants
+    - HEP.Data.Kinematics
+    - HEP.Data.SUSY
+    - HEP.Data.Quark
+  source-dirs: lib
+  cxx-sources: csrc/alphas.cc
+  cxx-options: -g -O2 -m64 -Wall -Wextra -pedantic -fPIC
+  extra-libraries:
+    - LHAPDF
+    - stdc++
+  dependencies: math-functions
 
 executables:
+  mhiggs:
+    main: mhiggs.hs
+    source-dirs: src
+    dependencies: mirage2
+
   mirage2:
     main: mirage2.hs
     source-dirs: src
-    cxx-sources: csrc/alphas.cc
-    cxx-options: -g -O2 -m64 -Wall -Wextra -pedantic -fPIC
+    dependencies: mirage2
