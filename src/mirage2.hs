@@ -2,8 +2,7 @@ module Main where
 
 import HEP.Data.AlphaS
 import HEP.Data.Constants
-import HEP.Data.SUSY.Parameters
-import HEP.Data.SUSY.Squark
+import HEP.Data.SUSY
 
 main :: IO ()
 main = do
@@ -19,14 +18,14 @@ main = do
     let mSUSY = getMSUSY point1 mu
     print mSUSY
 
-    -- let mbS = mSbottom point1 mu
-    -- print mbS
+    let mbS = mSbottom point1 mu
+    print mbS
 
-    -- let mh = mHiggs point1 mu as
-    -- print mh
+    let mh = mHiggs point1 mu as
+    print mh
 
 point1 :: ModelParams
-point1 = ModelParams { _M0 = 1500.0
+point1 = ModelParams { _M0 = 3000.0
                      , _c  = ModularWeights { _Hu = 0.0
                                             , _Hd = 1.0
                                             , _Q  = 0.5
