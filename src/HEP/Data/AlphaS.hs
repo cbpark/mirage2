@@ -24,9 +24,9 @@ mkAlphaS mt0 mz0 alpha0 = liftIO $ do
 foreign import ccall "alphas.h alphasQ" c_alphasQ
     :: CAlphaS -> CDouble -> IO CDouble
 
-alphasQ :: MonadIO m => AlphaS -> Double -> m Double
-alphasQ (AlphaS as) q = liftIO $
-    withForeignPtr as (\a -> realToFrac <$> c_alphasQ (CAlphaS a) (realToFrac q))
+alphasQ :: MonadIO m => Mass -> AlphaS -> m Double
+alphasQ (Mass m) (AlphaS as) = liftIO $
+    withForeignPtr as (\a -> realToFrac <$> c_alphasQ (CAlphaS a) (realToFrac m))
 
 initAlphaS :: MonadIO m => m AlphaS
 initAlphaS = mkAlphaS (getMass mt) (getMass mZ) alphasMZ
