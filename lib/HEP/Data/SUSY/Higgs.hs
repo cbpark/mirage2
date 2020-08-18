@@ -2,7 +2,7 @@
 
 module HEP.Data.SUSY.Higgs where
 
-import HEP.Data.Constants       (mZ2, mhSM, mtau, pi2, vEW, vEW2)
+import HEP.Data.Constants       (mZ2, mtau, pi2, vEW, vEW2)
 import HEP.Data.Kinematics      (Mass (..), massSq)
 import HEP.Data.SUSY.Parameters
 import HEP.Data.SUSY.Squark     (getMSUSY)
@@ -63,26 +63,28 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     termTau = mu4 / mStau ** 4
 
 mHiggsFunc :: ModularWeights
+           -> Mass          -- ^ Higgs mass
            -> (Mass, Mass)  -- ^ (mtMS, mbMS)
            -> Double        -- ^ alpha_s
            -> Double        -- ^ tan(beta)
            -> (Double -> Double)
-mHiggsFunc cs (mtMS, mbMS) as tanb m0 =
-    mHiggs cs (mtMS, mbMS) as tanb m0 - getMass mhSM
+mHiggsFunc cs (Mass mh) (mtMS, mbMS) as tanb m0 =
+    mHiggs cs (mtMS, mbMS) as tanb m0 - mh
 
 getM0Sol :: ModularWeights
+         -> Mass              -- ^ Higgs mass
          -> (Mass, Mass)      -- ^ (mtMS, mbMS)
          -> Double            -- ^ alpha_s
          -> (Double, Double)  -- ^ (low, upper)
          -> Double            -- ^ tan(beta)
          -> Maybe Double
-getM0Sol cs (mtMS, mbMS) as (xlow, xupper) tanb = do
-    let mhFunc = mHiggsFunc cs (mtMS, mbMS) as tanb
+getM0Sol cs mh (mtMS, mbMS) as (xlow, xupper) tanb = do
+    let mhFunc = mHiggsFunc cs mh (mtMS, mbMS) as tanb
     if xupper <= xlow
         then Nothing
         else do let param = RiddersParam 1000 (AbsTol 1.0e-3)
                 case ridders param (xlow, xupper) mhFunc of
                     Root m0      -> return m0
-                    NotBracketed -> getM0Sol cs (mtMS, mbMS) as
+                    NotBracketed -> getM0Sol cs mh (mtMS, mbMS) as
                                     (xlow, xupper * 0.95) tanb
                     _            -> Nothing

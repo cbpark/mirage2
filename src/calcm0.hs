@@ -1,7 +1,7 @@
 module Main where
 
 import           HEP.Data.AlphaS     (alphasQ, initAlphaS)
-import           HEP.Data.Constants  (mt)
+import           HEP.Data.Constants  (mhSM, mt)
 import           HEP.Data.Quark      (mMSbarHeavy)
 import           HEP.Data.SUSY       (ModularWeights (..), getM0Sol)
 
@@ -23,12 +23,12 @@ main = do
 
     let tanbs = U.enumFromStepN 6 0.2 10 -- 102
         m0s = U.map (fromMaybe 0
-                     . getM0Sol point1 (mtMS, mbMS) a3 (1e+3, 1e+4)) tanbs
-        result = U.zip m0s tanbs
+                     . getM0Sol point1 mhSM (mtMS, mbMS) a3 (1e+3, 1e+4)) tanbs
+        result = U.zip tanbs m0s
 
     withFile outfile WriteMode $ \h -> do
-        hPutStrLn h "# M0, tan(beta)"
-        U.mapM_ (uncurry (hPrintf h "%11.4f  %5.1f\n")) result
+        hPutStrLn h "# tan(beta), M0"
+        U.mapM_ (uncurry (hPrintf h "%5.1f  %11.4f\n")) result
 
     putStrLn $ "-- " <> outfile <> " generated."
 

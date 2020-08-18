@@ -1,7 +1,7 @@
 module Main where
 
 import HEP.Data.AlphaS    (alphasQ, initAlphaS)
-import HEP.Data.Constants (mt)
+import HEP.Data.Constants (mhSM, mt)
 import HEP.Data.Quark     (mMSbarHeavy)
 import HEP.Data.SUSY
 
@@ -33,7 +33,7 @@ main = do
     let mh = mHiggs point1 (mtMS, mbMS) a3 tanb m0
     print mh
 
-    let m0sol = getM0Sol point1 (mtMS, mbMS) a3 (5.0e+2, 1.0e+4) 7
+    let m0sol = getM0Sol point1 mhSM (mtMS, mbMS) a3 (1.0e+3, 1.0e+4) 10
     putStrLn $ "m0sol = " ++ show m0sol
 
 point1 :: ModularWeights
