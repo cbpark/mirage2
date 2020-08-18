@@ -2,6 +2,7 @@ module Main where
 
 import           HEP.Data.AlphaS     (alphasQ, initAlphaS)
 import           HEP.Data.Constants  (mhSM, mt)
+import           HEP.Data.Kinematics (Mass (..))
 import           HEP.Data.Quark      (mMSbarHeavy)
 import           HEP.Data.SUSY       (ModularWeights (..), getM0Sol)
 
@@ -21,14 +22,21 @@ main = do
     (   _, mbMS, _) <- mMSbarHeavy alphaS mtMS
     a3 <- alphasQ mtMS alphaS
 
-    let tanbs = U.enumFromStepN 6 0.2 10 -- 102
-        m0s = U.map (fromMaybe 0
-                     . getM0Sol point1 mhSM (mtMS, mbMS) a3 (1e+3, 1e+4)) tanbs
-        result = U.zip tanbs m0s
+    let tanbs = U.enumFromStepN 6.0 0.2 200
+        getM0 mh = fromMaybe 0
+                   . getM0Sol point1 mh (mtMS, mbMS) a3 (1e+3, 1e+4)
+
+        twoSigma = Mass 0.48
+        m0s0 = U.map (getM0 mhSM) tanbs
+        m0s1 = U.map (getM0 (mhSM - twoSigma)) tanbs
+        m0s2 = U.map (getM0 (mhSM + twoSigma)) tanbs
+        result = U.zip4 tanbs m0s0 m0s1 m0s2
 
     withFile outfile WriteMode $ \h -> do
-        hPutStrLn h "# tan(beta), M0"
-        U.mapM_ (uncurry (hPrintf h "%5.1f  %11.4f\n")) result
+        hPutStrLn h "# tan(beta), M0, M0(-2sigma), M0(+2sigma)"
+        U.mapM_ (\(tanb, m0, m1, m2) ->
+                     hPrintf h "%5.1f  %11.4f  %11.4f  %11.4f\n"
+                     tanb m0 m1 m2) result
 
     putStrLn $ "-- " <> outfile <> " generated."
 

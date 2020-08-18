@@ -26,7 +26,7 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     | mhSq <= 0 = 0
     | otherwise = sqrt mhSq
   where
-    mhSq = mZ2 * cos2b * cos2b -- * (1.0 - 3 * loopFac * 2 * mt2 / vEW2 * loopT)
+    mhSq = mZ2 * cos2b * cos2b
            + 3.0 / (4 * pi2) * mt2 * mt2 / vEW2 * termT
            - yb2 * yb2 * vEW2 * loopFac * termB
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau

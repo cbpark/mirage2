@@ -1,6 +1,8 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 module HEP.Data.Kinematics where
 
-newtype Mass = Mass { getMass :: Double } deriving (Eq, Ord)
+newtype Mass = Mass { getMass :: Double } deriving (Eq, Ord, Num)
 
 instance Show Mass where
     show = show . getMass
