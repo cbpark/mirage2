@@ -16,6 +16,10 @@ getMu :: ModularWeights
 getMu ModularWeights {..} mStar m0 =
     mStar * (mStar / m0) ** (7.0 / 12) / _cHd ** (1.0 / 3)
 
+-- | From <https://arxiv.org/abs/1112.3336 arXiv:1112.3336>
+--
+--   valid for moderate or large tan(beta) and
+--   (m_{~t_2}^2 - m_{~t_1}^2) / (m_{~t_2}^2 + m_{~t_1}^2) < 0.5.
 mHiggs :: ModularWeights
        -> (Mass, Mass)  -- ^ (mtMS, mbMS)
        -> Double        -- ^ alpha_s
