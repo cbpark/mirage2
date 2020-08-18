@@ -28,6 +28,11 @@ library:
   dependencies: math-functions
 
 executables:
+  mirage2:
+    main: mirage2.hs
+    source-dirs: src
+    dependencies: mirage2
+
   mhiggs:
     main: mhiggs.hs
     source-dirs: src
@@ -36,7 +41,9 @@ executables:
       - vector
       - mirage2
 
-  mirage2:
-    main: mirage2.hs
+  calcm0:
+    main: calcm0.hs
     source-dirs: src
-    dependencies: mirage2
+    dependencies:
+      - vector
+      - mirage2

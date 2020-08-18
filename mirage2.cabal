@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f2604a6d46194627ddf67d5243b60adddf8898ca80718c6a961a297c8ff1c8c3
+-- hash: 1a2af5c663837960618305a58e74d65e6182d50de0429f8d3189a12fa05d0612
 
 name:           mirage2
 version:        0.0.0.0
@@ -48,6 +48,19 @@ library
   build-depends:
       base >=4.12.0.0 && <5
     , math-functions
+  default-language: Haskell2010
+
+executable calcm0
+  main-is: calcm0.hs
+  other-modules:
+      Paths_mirage2
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  build-depends:
+      base >=4.12.0.0 && <5
+    , mirage2
+    , vector
   default-language: Haskell2010
 
 executable mhiggs

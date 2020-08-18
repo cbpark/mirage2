@@ -5,7 +5,7 @@ import HEP.Data.Kinematics (Mass (..), massSq)
 mW, mZ, mhSM :: Mass
 mW   = Mass 80.379
 mZ   = Mass 91.1876
-mhSM = Mass 125.10
+mhSM = Mass 125.09
 
 mW2, mZ2 :: Double
 mW2 = massSq mW
