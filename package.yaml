@@ -47,3 +47,9 @@ executables:
     dependencies:
       - vector
       - mirage2
+
+  ewsb:
+    main: ewsb.hs
+    source-dirs: src
+    dependencies:
+      - mirage2

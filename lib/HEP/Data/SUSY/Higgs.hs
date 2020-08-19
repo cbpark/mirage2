@@ -106,12 +106,12 @@ getMHdSq ModularWeights { _cHd = cHd } kHd m0 =
 type HiggsMassParams = (Double, Double, Double)
 
 -- | the mHd solution from the EWSB.
-getMHuSq :: ModularWeights
-         -> Double  -- ^ kHd
-         -> Double  -- ^ tan(beta)
-         -> Double  -- ^ M0
-         -> HiggsMassParams
-getMHuSq cs kHd tanb m0 =
+getMHParams :: ModularWeights
+            -> Double  -- ^ kHd
+            -> Double  -- ^ tan(beta)
+            -> Double  -- ^ M0
+            -> HiggsMassParams
+getMHParams cs kHd tanb m0 =
     ( mHdSq / tanbSq - (0.5 * mZ2 + mu * mu) * (1.0 - 1 / tanbSq)
     , mHdSq
     , mu )
@@ -121,8 +121,8 @@ getMHuSq cs kHd tanb m0 =
     tanbSq = tanb * tanb
 
 -- | the B solution from the EWSB.
-getB :: HiggsMassParams -> Double -> Double
-getB (mHuSq, mHdSq, mu) tanb =
+getBmu :: HiggsMassParams -> Double -> Double
+getBmu (mHuSq, mHdSq, mu) tanb =
     ((mHuSq + mHdSq) / absmu + 2 * absmu) * tanb / (1 + tanb * tanb)
   where
     absmu = abs mu
