@@ -20,7 +20,7 @@ main = do
     putStrLn $ "mstop = " ++ show mtS
     putStrLn $ "msbottom = " ++ show mbS
 
-    let mSUSY = getMSUSY point1 tanb m0 mu
+    let mSUSY = sqrt $ getMSUSY2 point1 tanb m0 mu
     putStrLn $ "mSUSY = " ++ show mSUSY
 
     (mtMS,    _, _) <- mMSbarHeavy alphaS mt

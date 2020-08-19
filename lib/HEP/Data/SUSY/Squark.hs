@@ -46,3 +46,7 @@ mSbottom cs@ModularWeights {..} tanb m0 =
 getMSUSY :: ModularWeights -> Double -> Double -> Double -> Double
 getMSUSY cs tanb m0 mu = sqrt $ mt1 * mt2
   where (Mass mt1, Mass mt2) = mStop cs tanb m0 mu
+
+getMSUSY2 :: ModularWeights -> Double -> Double -> Double -> Double
+getMSUSY2 cs tanb m0 mu = 0.5 * (mt1 * mt1 + mt2 * mt2)
+  where (Mass mt1, Mass mt2) = mStop cs tanb m0 mu
