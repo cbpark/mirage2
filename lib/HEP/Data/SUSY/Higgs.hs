@@ -9,16 +9,8 @@ import HEP.Data.SUSY.Squark     (getMSUSY2)
 
 import Numeric.RootFinding
 
-mStar :: Double
-mStar = 1e+3
-
-getMu :: ModularWeights
-      -> Double  -- ^ M_0
-      -> Double
-getMu ModularWeights { _cHd = cHd } m0 =
-    mStar * (mStar / m0) ** (7.0 / 12) / cHd ** (1.0 / 3)
-
--- | From <https://arxiv.org/abs/1112.3336 arXiv:1112.3336>
+-- | From <https://arxiv.org/abs/1112.3336 arXiv:1112.3336> and
+--   <https://arxiv.org/abs/hep-ph/0001002 arXiv:hep-ph/0001002>
 --
 --   valid for moderate or large tan(beta) and
 --   (m_{~t_2}^2 - m_{~t_1}^2) / (m_{~t_2}^2 + m_{~t_1}^2) < 0.5.
@@ -32,8 +24,12 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     | mhSq <= 0 = 0
     | otherwise = sqrt mhSq
   where
-    -- the first term is the tree-level Higgs mass for m_A >> m_Z.
-    mhSq = mZ2 * cos2b * cos2b
+    -- for mA >> mZ, it is mZ2 * cos2b * cos2b.
+    mh0Sq = 0.5 * (mA2 + mZ2
+                   - sqrt ((mA2 + mZ2) ** 2 - 4 * mA2 * mZ2 * cos2b * cos2b))
+    mA2 = m0 * m0
+
+    mhSq = mh0Sq -- mZ2 * cos2b * cos2b
            + 3.0 / (4 * pi2) * mt2 * mt2 / vEW2 * termT
            - yb2 * yb2 * vEW2 * loopFac * termB
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau
@@ -45,16 +41,18 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     -- mSUSY = getMSUSY cs tanb m0 mu
     -- mSUSY2 = mSUSY * mSUSY
     mSUSY2 = getMSUSY2 cs tanb m0 mu
-    loopT = log (mSUSY2 / mt2)
+    loopT = log (1 + mSUSY2 / mt2)
 
     aT = m0 - mu / tanb
     aT2 = aT * aT
     xT = 2.0 * aT2 / mSUSY2 * (1.0 - aT2 / (12.0 * mSUSY2))
     loopFac = 1.0 / (16 * pi2)
+    yt = getMass mtMS / vEW
 
     termT = 0.5 * xT + loopT
             + loopFac * (1.5 * mt2 / vEW2 - 32 * pi * as)
             * (xT * loopT + loopT * loopT)
+            + (4 * as / (3 * pi) - 5 * yt * yt * loopFac) * loopT
 
     -- the contribution from sbottom
     yb = getMass mbMS / (vEW * cosb)
@@ -67,7 +65,7 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     -- the contribution from stau
     ytau = getMass mtau / (vEW * cosb)
     ytau2 = ytau * ytau
-    mStau = m0 * _cL
+    mStau = m0 * sqrt _cL
     termTau = mu4 / mStau ** 4
 
 mHiggsFunc :: ModularWeights
@@ -79,21 +77,21 @@ mHiggsFunc :: ModularWeights
 mHiggsFunc cs (Mass mh) (mtMS, mbMS) as tanb m0 =
     mHiggs cs (mtMS, mbMS) as tanb m0 - mh
 
-getM0Sol :: ModularWeights
-         -> Mass              -- ^ Higgs mass
-         -> (Mass, Mass)      -- ^ (mtMS, mbMS)
-         -> Double            -- ^ alpha_s
-         -> (Double, Double)  -- ^ (low, upper)
-         -> Double            -- ^ tan(beta)
-         -> Maybe Double
-getM0Sol cs mh (mtMS, mbMS) as (xlow, xup) tanb = do
+getM0FromHiggs :: ModularWeights
+               -> Mass              -- ^ Higgs mass
+               -> (Mass, Mass)      -- ^ (mtMS, mbMS)
+               -> Double            -- ^ alpha_s
+               -> (Double, Double)  -- ^ (low, upper)
+               -> Double            -- ^ tan(beta)
+               -> Maybe Double
+getM0FromHiggs cs mh (mtMS, mbMS) as (xlow, xup) tanb = do
     let mhFunc = mHiggsFunc cs mh (mtMS, mbMS) as tanb
     if xup <= xlow
         then Nothing
         else do let param = RiddersParam 1000 (AbsTol 1.0e-3)
                 case ridders param (xlow, xup) mhFunc of
                     Root m0      -> return m0
-                    NotBracketed -> getM0Sol cs mh (mtMS, mbMS) as
+                    NotBracketed -> getM0FromHiggs cs mh (mtMS, mbMS) as
                                     (xlow, xup * 0.95) tanb
                     _            -> Nothing
 
@@ -114,7 +112,7 @@ getMHParams :: ModularWeights
             -> Double            -- ^ tan(beta)
             -> Maybe HiggsParams
 getMHParams cs kHd mh mqs a3 xrange tanb = do
-    m0 <- getM0Sol cs mh mqs a3 xrange tanb
+    m0 <- getM0FromHiggs cs mh mqs a3 xrange tanb
     let mH2@(mHu2, mHd2, mu) = getMHParams' cs kHd tanb m0
         bH = getBmu mH2 tanb
     return $ HiggsParams { _M0      = m0
@@ -124,6 +122,12 @@ getMHParams cs kHd mh mqs a3 xrange tanb = do
                          , _B       = bH
                          , _mu      = mu
                          }
+
+deltaB :: HiggsParams -> Double
+deltaB HiggsParams {..} =
+    4 * t2 / (t2 - 1) ** 2 * (1 + (t2 + 1) / _tanbeta * bMu / mZ2)
+  where t2 = _tanbeta * _tanbeta
+        bMu = abs (_B * _mu)
 
 -- | (mHu^2, mHd^2, mu)
 type HiggsMassParams = (Double, Double, Double)
