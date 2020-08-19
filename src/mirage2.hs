@@ -10,7 +10,7 @@ main = do
     alphaS <- initAlphaS
 
     let tanb = 10.0
-        m0 = 2230.0
+        m0 = 4033
 
     let mu = getMu point1 m0
     putStrLn $ "mu = " ++ show mu
@@ -33,8 +33,11 @@ main = do
     let mh = mHiggs point1 (mtMS, mbMS) a3 tanb m0
     print mh
 
-    let m0sol = getM0Sol point1 mhSM (mtMS, mbMS) a3 (1.0e+3, 1.0e+4) 10
-    putStrLn $ "m0sol = " ++ show m0sol
+    let m0sol = getM0FromHiggs point1 mhSM (mtMS, mbMS) a3 (1.0e+3, 5.0e+4) 10
+    putStrLn $ "m0sol (Higgs)= " ++ show m0sol
+
+    let m0sol' = getM0FromStop point1 1000.0 10
+    putStrLn $ "m0sol (stop) = " ++ show m0sol'
 
 point1 :: ModularWeights
 point1 = ModularWeights { _cHu = 0.0

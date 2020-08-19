@@ -41,8 +41,15 @@ executables:
       - vector
       - mirage2
 
-  calcm0:
-    main: calcm0.hs
+  calcm0_higgs:
+    main: calcm0_higgs.hs
+    source-dirs: src
+    dependencies:
+      - vector
+      - mirage2
+
+  calcm0_stop:
+    main: calcm0_stop.hs
     source-dirs: src
     dependencies:
       - vector
