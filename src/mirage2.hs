@@ -12,7 +12,7 @@ main = do
     let tanb = 10.0
         m0 = 2230.0
 
-    let mu = getMu point1 1000.0 m0
+    let mu = getMu point1 m0
     putStrLn $ "mu = " ++ show mu
 
     let mtS = mStop point1 tanb m0 mu

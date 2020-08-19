@@ -14,6 +14,10 @@ data ModularWeights = ModularWeights { _cHu :: Double
                                      , _ceR :: Double
                                      } deriving Show
 
+-- data HuHdLoopFactor = HuHdLoopFactor { _kHu :: Double
+--                                      , _kHd :: Double
+--                                      } deriving Show
+
 cos2Beta :: Double -> Double
 cos2Beta tanb = (1.0 - tanbSq) / (1.0 + tanbSq)
   where tanbSq = tanb * tanb

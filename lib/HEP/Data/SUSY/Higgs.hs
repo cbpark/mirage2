@@ -9,12 +9,14 @@ import HEP.Data.SUSY.Squark     (getMSUSY)
 
 import Numeric.RootFinding
 
+mStar :: Double
+mStar = 1e+3
+
 getMu :: ModularWeights
-      -> Double  -- ^ m_*
       -> Double  -- ^ M_0
       -> Double
-getMu ModularWeights {..} mStar m0 =
-    mStar * (mStar / m0) ** (7.0 / 12) / _cHd ** (1.0 / 3)
+getMu ModularWeights { _cHd = cHd } m0 =
+    mStar * (mStar / m0) ** (7.0 / 12) / cHd ** (1.0 / 3)
 
 -- | From <https://arxiv.org/abs/1112.3336 arXiv:1112.3336>
 --
@@ -37,7 +39,7 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
 
     [cos2b, cosb] = fmap ($ tanb) [cos2Beta, cosBeta]
     mt2 = massSq mtMS
-    mu = getMu cs 1.0e+3 m0
+    mu = getMu cs m0
     mu4 = mu ** 4
 
     mSUSY = getMSUSY cs tanb m0 mu
@@ -92,3 +94,35 @@ getM0Sol cs mh (mtMS, mbMS) as (xlow, xupper) tanb = do
                     NotBracketed -> getM0Sol cs mh (mtMS, mbMS) as
                                     (xlow, xupper * 0.95) tanb
                     _            -> Nothing
+
+getMHdSq :: ModularWeights
+         -> Double  -- ^ kHd
+         -> Double  -- ^ M0
+         -> Double
+getMHdSq ModularWeights { _cHd = cHd } kHd m0 =
+    m0 * m0 * (cHd + kHd / (8 * pi2))
+
+-- | (mHu^2, mHd^2, mu)
+type HiggsMassParams = (Double, Double, Double)
+
+-- | the mHd solution from the EWSB.
+getMHuSq :: ModularWeights
+         -> Double  -- ^ kHd
+         -> Double  -- ^ tan(beta)
+         -> Double  -- ^ M0
+         -> HiggsMassParams
+getMHuSq cs kHd tanb m0 =
+    ( mHdSq / tanbSq - (0.5 * mZ2 + mu * mu) * (1.0 - 1 / tanbSq)
+    , mHdSq
+    , mu )
+  where
+    mHdSq = getMHdSq cs kHd m0
+    mu = getMu cs m0
+    tanbSq = tanb * tanb
+
+-- | the B solution from the EWSB.
+getB :: HiggsMassParams -> Double -> Double
+getB (mHuSq, mHdSq, mu) tanb =
+    ((mHuSq + mHdSq) / absmu + 2 * absmu) * tanb / (1 + tanb * tanb)
+  where
+    absmu = abs mu
