@@ -66,3 +66,4 @@ executables:
     source-dirs: src
     dependencies:
       - mirage2
+      - vector

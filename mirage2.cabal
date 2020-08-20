@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 122bfcba14d74d02735ca24d87f5838a77cf401c25c81ec536809bb8fb6a2801
+-- hash: 2eb8ad2db11d9326a76606b83b5633fb4962e4ca58a4aaafa2a4d71c6630a4ab
 
 name:           mirage2
 version:        0.0.0.0
@@ -99,6 +99,7 @@ executable finetuning
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
+    , vector
   default-language: Haskell2010
 
 executable mhiggs
