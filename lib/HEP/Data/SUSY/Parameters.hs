@@ -25,7 +25,7 @@ getMu :: ModularWeights
       -> Double  -- ^ M_0
       -> Double
 getMu ModularWeights { _cHd = cHd } m0 =
-    mStar * (mStar / m0) ** (7.0 / 12) / cHd ** (1.0 / 3)
+    mStar * (mStar / m0) ** (7.0 / 12) / cHd ** (1.0 / 8)
 
 cos2Beta :: Double -> Double
 cos2Beta tanb = (1.0 - tanbSq) / (1.0 + tanbSq)

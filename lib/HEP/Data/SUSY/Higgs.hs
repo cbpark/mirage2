@@ -27,7 +27,7 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     -- for mA >> mZ, it is mZ2 * cos2b * cos2b.
     mh0Sq = 0.5 * (mA2 + mZ2
                    - sqrt ((mA2 + mZ2) ** 2 - 4 * mA2 * mZ2 * cos2b * cos2b))
-    mA2 = m0 * m0
+    mA2 = _cHd * m0 * m0
 
     mhSq = mh0Sq -- mZ2 * cos2b * cos2b
            + 3.0 / (4 * pi2) * mt2 * mt2 / vEW2 * termT
