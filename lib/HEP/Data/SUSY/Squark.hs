@@ -5,8 +5,7 @@ module HEP.Data.SUSY.Squark where
 import HEP.Data.Constants       (mZ2, mb, mt, sinThetaW2)
 import HEP.Data.Kinematics      (Mass (..), massSq)
 import HEP.Data.SUSY.Parameters
-
-import Numeric.RootFinding
+import HEP.Util (riddersSolver)
 
 mSquark :: Mass    -- ^ m_{~q_R}
         -> Mass    -- ^ quark mass
@@ -53,13 +52,12 @@ getMSUSY2 :: ModularWeights -> Double -> Double -> Double -> Double
 getMSUSY2 cs tanb m0 mu = 0.5 * (mt1 * mt1 + mt2 * mt2)
   where (Mass mt1, Mass mt2) = mStop cs tanb m0 mu
 
-getM0FromStop :: ModularWeights -> Double -> Double -> Maybe Double
-getM0FromStop cs mstop tanb = do
-    let muF = getMu cs
-        stopF m0 = let (Mass mt1, _) = mStop cs tanb m0 (muF m0)
+getM0FromStop :: ModularWeights
+              -> Double
+              -> (Double, Double)
+              -> Double
+              -> Maybe Double
+getM0FromStop cs mstop range tanb = do
+    let stopF m0 = let (Mass mt1, _) = mStop cs tanb m0 (getMu cs m0)
                    in mstop - mt1
-
-    let param = RiddersParam 1000 (AbsTol 1e-3)
-    case ridders param (1e+2, 1e+4) stopF of
-        Root m0 -> return m0
-        _       -> Nothing
+    riddersSolver stopF range

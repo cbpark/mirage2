@@ -18,6 +18,14 @@ data ModularWeights = ModularWeights { _cHu :: Double
 --                                      , _kHd :: Double
 --                                      } deriving Show
 
+data HiggsParams = HiggsParams { _M0      :: Double
+                               , _tanbeta :: Double
+                               , _mHu2    :: Double
+                               , _mHd2    :: Double
+                               , _B       :: Double
+                               , _mu      :: Double
+                               } deriving Show
+
 mStar :: Double
 mStar = 1e+3
 

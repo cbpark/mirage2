@@ -5,6 +5,8 @@ import HEP.Data.Constants (mhSM, mt)
 import HEP.Data.Quark     (mMSbarHeavy)
 import HEP.Data.SUSY
 
+import Data.Maybe         (fromJust)
+
 main :: IO ()
 main = do
     alphaS <- initAlphaS
@@ -33,11 +35,16 @@ main = do
     let mh = mHiggs point1 (mtMS, mbMS) a3 tanb m0
     print mh
 
-    let m0sol = getM0FromHiggs point1 mhSM (mtMS, mbMS) a3 (1.0e+3, 5.0e+4) 10
+    let m0sol = getM0FromHiggs point1 mhSM (mtMS, mbMS) a3 (1e+3, 5e+4) 10
     putStrLn $ "m0sol (Higgs)= " ++ show m0sol
 
-    let m0sol' = getM0FromStop point1 1000.0 10
+    let m0sol' = getM0FromStop point1 1000.0 (1e+3, 1e+4) 10
     putStrLn $ "m0sol (stop) = " ++ show m0sol'
+
+    let mHparams = getMHParams point1 0 mhSM (mtMS, mbMS) a3 (1e+3, 1e+4) tanb
+        dB = deltaB (fromJust mHparams)
+    print mHparams
+    putStrLn $ "delta B = " ++ show (1.0 / dB)
 
 point1 :: ModularWeights
 point1 = ModularWeights { _cHu = 0.0

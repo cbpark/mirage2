@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 03c5a0525a08115141d0dab7171f972e21107f97103cee2dd189b938675769d5
+-- hash: 122bfcba14d74d02735ca24d87f5838a77cf401c25c81ec536809bb8fb6a2801
 
 name:           mirage2
 version:        0.0.0.0
@@ -35,6 +35,7 @@ library
       HEP.Data.SUSY.Higgs
       HEP.Data.SUSY.Parameters
       HEP.Data.SUSY.Squark
+      HEP.Util
       Paths_mirage2
   hs-source-dirs:
       lib
@@ -78,6 +79,18 @@ executable calcm0_stop
 
 executable ewsb
   main-is: ewsb.hs
+  other-modules:
+      Paths_mirage2
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  build-depends:
+      base >=4.12.0.0 && <5
+    , mirage2
+  default-language: Haskell2010
+
+executable finetuning
+  main-is: finetuning.hs
   other-modules:
       Paths_mirage2
   hs-source-dirs:

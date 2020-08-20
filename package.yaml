@@ -60,3 +60,9 @@ executables:
     source-dirs: src
     dependencies:
       - mirage2
+
+  finetuning:
+    main: finetuning.hs
+    source-dirs: src
+    dependencies:
+      - mirage2
