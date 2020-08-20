@@ -19,21 +19,21 @@ mHiggs :: ModularWeights
        -> Double        -- ^ tan(beta)
        -> Double        -- ^ M_0
        -> Double
-mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
+mHiggs cs@ModularWeights {_cHd = cHd, _cL = cL} (mtMS, mbMS) as tanb m0
     | mhSq <= 0 = 0
     | otherwise = sqrt mhSq
   where
     -- for mA >> mZ, it is mZ2 * cos2b * cos2b.
     mh0Sq = 0.5 * (mA2 + mZ2
                    - sqrt ((mA2 + mZ2) ** 2 - 4 * mA2 * mZ2 * cos2b * cos2b))
-    mA2 = _cHd * m0 * m0
+    mA2 = cHd * m0 * m0
 
     mhSq = mh0Sq -- mZ2 * cos2b * cos2b
            + 3.0 / (4 * pi2) * mt2 * mt2 / vEW2 * termT
            - yb2 * yb2 * vEW2 * loopFac * termB
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau
 
-    [cos2b, cosb] = fmap ($ tanb) [cos2Beta, cosBeta]
+    [cos2b, cosb, sinb] = fmap ($ tanb) [cos2Beta, cosBeta, sinBeta]
     mt2 = massSq mtMS
     mu = getMu cs m0
 
@@ -46,7 +46,7 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     aT2 = aT * aT
     xT = 2.0 * aT2 / mSUSY2 * (1.0 - aT2 / (12.0 * mSUSY2))
     loopFac = 1.0 / (16 * pi2)
-    yt = getMass mtMS / vEW
+    yt = getMass mtMS / (vEW * sinb)
 
     termT = 0.5 * xT + loopT
             + loopFac * (1.5 * mt2 / vEW2 - 32 * pi * as)
@@ -74,8 +74,8 @@ mHiggs cs@ModularWeights {..} (mtMS, mbMS) as tanb m0
     -- the contribution from stau
     ytau = getMass mtau / (vEW * cosb)
     ytau2 = ytau * ytau
-    mStau = m0 * sqrt _cL
-    termTau = mu4 / mStau ** 4
+    mStau2 = m0 * m0 * cL
+    termTau = mu4 / (mStau2 * mStau2)
 
 integralFunc :: Double -> Double -> Double -> Double
 integralFunc a b c = num / den
