@@ -188,3 +188,26 @@ deltaB HiggsParams {..} =
     4 * t2 / (t2 - 1) ** 2 * (1 + (t2 + 1) / _tanbeta * bMu / mZ2)
   where t2 = _tanbeta * _tanbeta
         bMu = abs (_B * _mu)
+
+-- | obtain M0 from the condition that B = k * M0.
+getM0FromB :: ModularWeights
+           -> Double            -- ^ kHd
+           -> Double            -- ^ k of B = k * M0
+           -> (Double, Double)  -- ^ (xlow, xup)
+           -> Double            -- ^ tan(beta)
+           -> Maybe Double
+getM0FromB cs kHd k range tanb = do
+    let bF m0 = let b = getB (getMHParams' cs kHd tanb m0) tanb
+                in b - k * m0
+    riddersSolver bF range
+
+getMuFromHiggs :: ModularWeights
+               -> Mass              -- ^ Higgs mass
+               -> (Mass, Mass)      -- ^ (mtMS, mbMS)
+               -> Double            -- ^ alpha_s
+               -> (Double, Double)  -- ^ (low, upper)
+               -> Double            -- ^ tan(beta)
+               -> Maybe Double
+getMuFromHiggs cs mh mqMS as range tanb = do
+    m0 <- getM0FromHiggs cs mh mqMS as range tanb
+    return (getMu cs m0)

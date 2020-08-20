@@ -55,6 +55,20 @@ executables:
       - vector
       - mirage2
 
+  calcm0_bmu:
+    main: calcm0_bmu.hs
+    source-dirs: src
+    dependencies:
+      - mirage2
+      - vector
+
+  calcmu_higgs:
+    main: calcmu_higgs.hs
+    source-dirs: src
+    dependencies:
+      - vector
+      - mirage2
+
   ewsb:
     main: ewsb.hs
     source-dirs: src
