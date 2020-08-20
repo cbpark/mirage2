@@ -1,3 +1,5 @@
+{-# LANGUAGE Strict #-}
+
 module HEP.Util where
 
 import Numeric.RootFinding
