@@ -64,7 +64,7 @@ mHiggs cs@ModularWeights {_cHd = cHd, _cL = cL} (mtMS, mbMS) as tanb m0
            + yt / 4 * aT
            * integralFunc (massSq mst1) (massSq mst2) (mu * mu))
           * mu * tanb / pi
-    yb = getMass mbMS / (vEW * cosb * dhb)
+    yb = getMass mbMS / (vEW * cosb * (1 + dhb))
     yb2 = yb * yb
     mu4 = mu2 * mu2
     termB = mu4 / (mSUSY2 * mSUSY2)
