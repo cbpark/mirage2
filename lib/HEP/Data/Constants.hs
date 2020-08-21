@@ -1,6 +1,8 @@
 module HEP.Data.Constants where
 
-import HEP.Data.Kinematics (Mass (..), massSq)
+import HEP.Data.Kinematics             (Mass (..), massSq)
+
+import Numeric.MathFunctions.Constants (m_1_sqrt_2)
 
 mW, mZ, mhSM :: Mass
 mW   = Mass 80.379
@@ -26,7 +28,7 @@ mtau2 = massSq mtau
 
 gFermi, gW, gW2 :: Double
 gFermi = 1.1663787e-5
-gW2    = 8 * mW2 * gFermi / sqrt2
+gW2    = 8 * mW2 * gFermi * m_1_sqrt_2
 gW     = sqrt gW2
 
 -- | vEW = 174.1 GeV.
@@ -38,11 +40,9 @@ alphasMZ, sinThetaW2 :: Double
 alphasMZ = 0.118
 sinThetaW2 = 0.23122
 
-sqrt2 :: Double
-sqrt2 = 1.4142135623730951
-
 pi2 :: Double
 pi2 = 9.869604401089358
 
+-- | 1 / (16 * pi).
 loopFac :: Double
-loopFac = 1 / (16 * pi2)
+loopFac = 0.0625 / pi2
