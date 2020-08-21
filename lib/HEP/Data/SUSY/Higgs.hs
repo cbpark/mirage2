@@ -85,14 +85,6 @@ integralFunc a b c = num / den
     num = a * b * log (a / b) + b * c * log (b / c) + a * c * log (c / a)
     den = (a - b) * (b - c) * (a - c)
 
-mHiggsFunc :: ModularWeights
-           -> Mass          -- ^ Higgs mass
-           -> (Mass, Mass)  -- ^ (mtMS, mbMS)
-           -> Double        -- ^ alpha_s
-           -> Double        -- ^ tan(beta)
-           -> (Double -> Double)
-mHiggsFunc cs (Mass mh) mqMS as tanb m0 = mHiggs cs mqMS as tanb m0 - mh
-
 getM0FromHiggs :: ModularWeights
                -> Mass              -- ^ Higgs mass
                -> (Mass, Mass)      -- ^ (mtMS, mbMS)
@@ -100,8 +92,8 @@ getM0FromHiggs :: ModularWeights
                -> (Double, Double)  -- ^ (low, upper)
                -> Double            -- ^ tan(beta)
                -> Maybe Double
-getM0FromHiggs cs mh mqMS as range tanb = riddersSolver mhFunc range
-  where mhFunc = mHiggsFunc cs mh mqMS as tanb
+getM0FromHiggs cs (Mass mh) mqMS as range tanb = riddersSolver mhFunc range
+  where mhFunc m0 = mHiggs cs mqMS as tanb m0 - mh
 
 getMHParams :: ModularWeights
             -> Double            -- ^ kHd
@@ -131,10 +123,11 @@ getMHParams' :: ModularWeights
              -> Double  -- ^ tan(beta)
              -> Double  -- ^ M0
              -> HiggsMassParams
-getMHParams' cs kHd tanb m0 =
-    ( mHdSq / tanbSq - (0.5 * mZ2 + mu * mu) * (1.0 - 1 / tanbSq)
-    , mHdSq
-    , mu )
+getMHParams' cs kHd tanb m0
+    | tanb <= 0 = (0, 0, 0)
+    | otherwise = ( mHdSq / tanbSq - (0.5 * mZ2 + mu * mu) * (1 - 1 / tanbSq)
+                  , mHdSq
+                  , mu )
   where
     mHdSq = getMHdSq cs kHd m0
     mu = getMu cs m0
@@ -149,8 +142,10 @@ getMHdSq ModularWeights { _cHd = cHd } kHd m0 =
 
 -- | the B solution from the EWSB.
 getB :: HiggsMassParams -> Double -> Double
-getB (mHuSq, mHdSq, mu) tanb =
-    ((mHuSq + mHdSq) / absmu + 2 * absmu) * tanb / (1 + tanb * tanb)
+getB (mHuSq, mHdSq, mu) tanb
+    | mu == 0   = 0
+    | otherwise = ((mHuSq + mHdSq) / absmu + 2 * absmu)
+                  * tanb / (1 + tanb * tanb)
   where
     absmu = abs mu
 
@@ -168,7 +163,7 @@ getM0FromEWSB cs kHd range tanb = riddersSolver ewsbF range
 
 getM0FromDBI :: ModularWeights
              -> Double            -- ^ kHd
-             -> Double            -- ^ (Delta B)^{-1}
+             -> Double            -- ^ the (Delta B)^{-1} value
              -> (Double, Double)  -- ^ (xlow, xup)
              -> Double            -- ^ tan(beta)
              -> Maybe Double
@@ -182,7 +177,7 @@ getM0FromDBI cs kHd dBI range tanb = riddersSolver dBIF range
                                         , _mHd2    = mHd2
                                         , _B       = b
                                         , _mu      = mu }
-              in (1.0 / deltaB hparams - dBI)
+              in (1 / deltaB hparams - dBI)
 
 deltaB :: HiggsParams -> Double
 deltaB HiggsParams {_tanbeta = tanb, _B = b, _mu = mu} =
@@ -210,6 +205,5 @@ getMuFromHiggs :: ModularWeights
                -> (Double, Double)  -- ^ (low, upper)
                -> Double            -- ^ tan(beta)
                -> Maybe Double
-getMuFromHiggs cs mh mqMS as range tanb = do
-    m0 <- getM0FromHiggs cs mh mqMS as range tanb
-    return (getMu cs m0)
+getMuFromHiggs cs mh mqMS as range tanb =
+    getMu cs <$> getM0FromHiggs cs mh mqMS as range tanb
