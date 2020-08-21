@@ -43,3 +43,6 @@ sqrt2 = 1.4142135623730951
 
 pi2 :: Double
 pi2 = 9.869604401089358
+
+loopFac :: Double
+loopFac = 1 / (16 * pi2)

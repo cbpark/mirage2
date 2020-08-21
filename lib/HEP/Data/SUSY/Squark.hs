@@ -61,7 +61,7 @@ getM0FromStop :: ModularWeights
               -> (Double, Double)  -- ^ (xlow, xup)
               -> Double            -- ^ tan(beta)
               -> Maybe Double
-getM0FromStop cs mstop range tanb = do
-    let stopF m0 = let Mass mst1 = fst $ mStop cs tanb m0 (getMu cs m0)
-                   in mstop - mst1
-    riddersSolver stopF range
+getM0FromStop cs mstop range tanb = riddersSolver stopF range
+  where
+    stopF m0 = let Mass mst1 = fst $ mStop cs tanb m0 (getMu cs m0)
+               in mstop - mst1
