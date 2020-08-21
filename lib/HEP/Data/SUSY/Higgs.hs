@@ -21,7 +21,7 @@ mHiggs cs@ModularWeights {_cL = cL} (mtMS, mbMS) as tanb m0
     | mhSq <= 0 = 0
     | otherwise = sqrt mhSq
   where
-    mhSq = mHiggsTree cs tanb m0 -- mZ2 * cos2b * cos2b
+    mhSq = mHiggsTreeSq cs tanb m0 -- mZ2 * cos2b * cos2b
            + 3.0 / (4 * pi2) * mt2 * mt2 / vEW2 * termT
            - yb2 * yb2 * vEW2 * loopFac * termB
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau
@@ -67,11 +67,11 @@ mHiggs cs@ModularWeights {_cL = cL} (mtMS, mbMS) as tanb m0
     mStau2 = m0 * m0 * cL
     termTau = mu4 / (mStau2 * mStau2)
 
--- | Tree-level Higgs mass.
+-- | Squared tree-level Higgs mass.
 --
 --   for mA >> mZ, it is mZ2 * cos2b * cos2b.
-mHiggsTree :: ModularWeights -> Double -> Double -> Double
-mHiggsTree ModularWeights {_cHd = cHd} tanb m0 =
+mHiggsTreeSq :: ModularWeights -> Double -> Double -> Double
+mHiggsTreeSq ModularWeights {_cHd = cHd} tanb m0 =
     0.5 * (mA2mZ2
            - sqrt (mA2mZ2 * mA2mZ2 - 4 * mA2 * mZ2 * cos2b * cos2b))
   where
