@@ -11,12 +11,14 @@ ghc-options:        -Wall -Wcompat -O2 -funbox-strict-fields
 
 dependencies:
   - base >= 4.12.0.0 && < 5
+  - optparse-generic
 
 library:
   exposed-modules:
     - HEP.Data.AlphaS
     - HEP.Data.Constants
     - HEP.Data.Kinematics
+    - HEP.Data.Interface
     - HEP.Data.SUSY
     - HEP.Data.Quark
   source-dirs: lib
@@ -37,7 +39,6 @@ executables:
     main: mhiggs.hs
     source-dirs: src
     dependencies:
-      - optparse-generic
       - vector
       - mirage2
 

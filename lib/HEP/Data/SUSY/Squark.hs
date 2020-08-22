@@ -10,7 +10,7 @@ module HEP.Data.SUSY.Squark
 import HEP.Data.Constants       (mZ2, mb, mt, sinThetaW2)
 import HEP.Data.Kinematics      (Mass (..), massSq)
 import HEP.Data.SUSY.Parameters (ModularWeights (..), cos2Beta, getMu)
-import HEP.Util                 (riddersSolver)
+import HEP.Data.Util            (riddersSolver)
 
 mSquark :: Mass            -- ^ m_{~q_R}
         -> Mass            -- ^ quark mass
@@ -57,11 +57,12 @@ getMSUSY2 cs tanb m0 mu = 0.5 * (mst1 * mst1 + mst2 * mst2)
   where (Mass mst1, Mass mst2) = mStop cs tanb m0 mu
 
 getM0FromStop :: ModularWeights
+              -> Double            -- ^ m_*
               -> Double            -- ^ m_{stop}
               -> (Double, Double)  -- ^ (xlow, xup)
               -> Double            -- ^ tan(beta)
               -> Maybe Double
-getM0FromStop cs mstop range tanb = riddersSolver stopF range
+getM0FromStop cs mStar mstop range tanb = riddersSolver stopF range
   where
-    stopF m0 = let Mass mst1 = fst $ mStop cs tanb m0 (getMu cs m0)
+    stopF m0 = let Mass mst1 = fst $ mStop cs tanb m0 (getMu cs mStar m0)
                in mstop - mst1

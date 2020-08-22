@@ -26,13 +26,11 @@ data HiggsParams = HiggsParams { _M0      :: Double
                                , _mu      :: Double
                                } deriving Show
 
-mStar :: Double
-mStar = 1e+3
-
 getMu :: ModularWeights
+      -> Double  -- ^ m_*
       -> Double  -- ^ M_0
       -> Double
-getMu ModularWeights { _cHd = cHd } m0 =
+getMu ModularWeights { _cHd = cHd } mStar m0 =
     mStar * (mStar / m0) ** (7.0 / 12) / cHd ** (1.0 / 8)
 
 cos2Beta :: Double -> Double

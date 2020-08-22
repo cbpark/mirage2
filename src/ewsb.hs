@@ -5,7 +5,8 @@ import HEP.Data.SUSY
 main :: IO ()
 main = do
     let tanb = 10
-        m0sol = getM0FromEWSB point1 0 (1e+1, 1e+10) tanb
+        mStar = 2000.0
+        m0sol = getM0FromEWSB point1 mStar 0 (mStar, 1e+10) tanb
     putStrLn $ "m0sol = " ++ show m0sol
 
 point1 :: ModularWeights

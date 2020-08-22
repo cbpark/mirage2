@@ -1,21 +1,27 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
+import           HEP.Data.Interface  (InputArgs (..))
 import           HEP.Data.SUSY       (ModularWeights (..), getM0FromStop)
 
 import qualified Data.Vector.Unboxed as U
+import           Options.Generic     (unwrapRecord)
 
 import           Data.Maybe          (fromMaybe)
-import           System.Environment  (getArgs)
 import           System.IO           (IOMode (..), hPutStrLn, withFile)
 import           Text.Printf         (hPrintf)
 
 main :: IO ()
 main = do
-    outfile <- head <$> getArgs
+    input <- unwrapRecord "Calculate M0 from lighter stop mass"
 
-    let mstop = 1000.0
+    let mStar   = msusy input
+        outfile = output input
+
+        mstop = 1000.0
         tanbs = U.enumFromStepN 6.0 0.2 200
-        getM0 = fromMaybe 0 . getM0FromStop point1 mstop (1e+2, 1e+4)
+        getM0 = fromMaybe 0 . getM0FromStop point1 mStar mstop (1e+2, 1e+4)
 
         m0s = U.map getM0 tanbs
         result = U.zip tanbs m0s

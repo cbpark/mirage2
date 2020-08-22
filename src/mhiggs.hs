@@ -19,7 +19,8 @@ import           System.IO           (IOMode (..), hPutStrLn, withFile)
 main :: IO ()
 main = do
     input <- unwrapRecord "Calculate the Higgs mass for given tan(beta)"
-    let tanbeta = tanb input
+    let mStar   = msusy input
+        tanbeta = tanb input
         outfile = output input
 
     putStrLn $ "-- tan(beta) = " <> show tanbeta
@@ -29,8 +30,8 @@ main = do
     (   _, mbMS, _) <- mMSbarHeavy alphaS mtMS
     a3 <- alphasQ mtMS alphaS
 
-    let m0s = U.enumFromStepN 1000 0.5 20000
-        mhs = U.map (mHiggs point1 (mtMS, mbMS) a3 tanbeta) m0s
+    let m0s = U.enumFromStepN mStar 0.5 18000
+        mhs = U.map (mHiggs point1 mStar (mtMS, mbMS) a3 tanbeta) m0s
         result = U.zip m0s mhs
 
     withFile outfile WriteMode $ \h -> do
@@ -42,7 +43,8 @@ main = do
     putStrLn $ "-- " <> outfile <> " generated."
 
 data InputArgs w = InputArgs
-    { tanb   :: w ::: Double <?> "tan(beta)"
+    { msusy  :: w ::: Double <?> "m(sfermion)"
+    , tanb   :: w ::: Double <?> "tan(beta)"
     , output :: w ::: String <?> "the name of the output file"
     } deriving Generic
 

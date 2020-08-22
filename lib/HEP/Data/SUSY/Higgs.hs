@@ -4,7 +4,7 @@ import HEP.Data.Constants       (loopFac, mZ2, mtau, pi2, vEW, vEW2)
 import HEP.Data.Kinematics      (Mass (..), massSq)
 import HEP.Data.SUSY.Parameters
 import HEP.Data.SUSY.Squark     (getMSUSY2, mSbottom, mStop)
-import HEP.Util                 (riddersSolver)
+import HEP.Data.Util            (riddersSolver)
 
 -- | From <https://arxiv.org/abs/1112.3336 arXiv:1112.3336> and
 --   <https://arxiv.org/abs/hep-ph/0001002 arXiv:hep-ph/0001002>
@@ -12,12 +12,13 @@ import HEP.Util                 (riddersSolver)
 --   valid for moderate or large tan(beta) and
 --   (m_{~t_2}^2 - m_{~t_1}^2) / (m_{~t_2}^2 + m_{~t_1}^2) < 0.5.
 mHiggs :: ModularWeights
+       -> Double        -- ^ m_*
        -> (Mass, Mass)  -- ^ (mtMS, mbMS)
        -> Double        -- ^ alpha_s
        -> Double        -- ^ tan(beta)
        -> Double        -- ^ M_0
        -> Double
-mHiggs cs@ModularWeights {_cL = cL} (mtMS, mbMS) as tanb m0
+mHiggs cs@ModularWeights {_cL = cL} mStar (mtMS, mbMS) as tanb m0
     | mhSq <= 0 = 0
     | otherwise = sqrt mhSq
   where
@@ -27,7 +28,7 @@ mHiggs cs@ModularWeights {_cL = cL} (mtMS, mbMS) as tanb m0
            - ytau2 * ytau2 * vEW2 * loopFac / 3 * termTau
 
     mt2 = massSq mtMS
-    mu = getMu cs m0
+    mu = getMu cs mStar m0
 
     -- mSUSY = getMSUSY cs tanb m0 mu
     -- mSUSY2 = mSUSY * mSUSY
@@ -86,16 +87,18 @@ integralFunc a b c = num / den
     den = (a - b) * (b - c) * (a - c)
 
 getM0FromHiggs :: ModularWeights
+               -> Double            -- ^ m_*
                -> Mass              -- ^ Higgs mass
                -> (Mass, Mass)      -- ^ (mtMS, mbMS)
                -> Double            -- ^ alpha_s
                -> (Double, Double)  -- ^ (low, upper)
                -> Double            -- ^ tan(beta)
                -> Maybe Double
-getM0FromHiggs cs (Mass mh) mqMS as range tanb = riddersSolver mhFunc range
-  where mhFunc m0 = mHiggs cs mqMS as tanb m0 - mh
+getM0FromHiggs cs mStar (Mass mh) mqMS as range tanb = riddersSolver mhFunc range
+  where mhFunc m0 = mHiggs cs mStar mqMS as tanb m0 - mh
 
 getMHParams :: ModularWeights
+            -> Double            -- ^ m_*
             -> Double            -- ^ kHd
             -> Mass              -- ^ SM Higgs mass
             -> (Mass, Mass)      -- ^ (mt, mb)
@@ -103,9 +106,9 @@ getMHParams :: ModularWeights
             -> (Double, Double)  -- ^ the range of M0
             -> Double            -- ^ tan(beta)
             -> Maybe HiggsParams
-getMHParams cs kHd mh mqs a3 xrange tanb = do
-    m0 <- getM0FromHiggs cs mh mqs a3 xrange tanb
-    let mH2@(mHu2, mHd2, mu) = getMHParams' cs kHd tanb m0
+getMHParams cs mStar kHd mh mqs a3 xrange tanb = do
+    m0 <- getM0FromHiggs cs mStar mh mqs a3 xrange tanb
+    let mH2@(mHu2, mHd2, mu) = getMHParams' cs mStar kHd tanb m0
         bH = getB mH2 tanb
     return $ HiggsParams { _M0      = m0
                          , _tanbeta = tanb
@@ -119,18 +122,19 @@ type HiggsMassParams = (Double, Double, Double)
 
 -- | the mHd solution from the EWSB.
 getMHParams' :: ModularWeights
+             -> Double  -- ^ m_*
              -> Double  -- ^ kHd
              -> Double  -- ^ tan(beta)
              -> Double  -- ^ M0
              -> HiggsMassParams
-getMHParams' cs kHd tanb m0
+getMHParams' cs mStar kHd tanb m0
     | tanb <= 0 = (0, 0, 0)
     | otherwise = ( mHdSq / tanbSq - (0.5 * mZ2 + mu * mu) * (1 - 1 / tanbSq)
                   , mHdSq
                   , mu )
   where
     mHdSq = getMHdSq cs kHd m0
-    mu = getMu cs m0
+    mu = getMu cs m0 mStar
     tanbSq = tanb * tanb
 
 getMHdSq :: ModularWeights
@@ -150,26 +154,28 @@ getB (mHuSq, mHdSq, mu) tanb
     absmu = abs mu
 
 getM0FromEWSB :: ModularWeights
+              -> Double            -- ^ m_*
               -> Double            -- ^ kHd
               -> (Double, Double)  -- ^ (xlow, xup)
               -> Double            -- ^ tan(beta)
               -> Maybe Double
-getM0FromEWSB cs kHd range tanb = riddersSolver ewsbF range
+getM0FromEWSB cs mStar kHd range tanb = riddersSolver ewsbF range
   where
-    ewsbF m0 = let mH@(mHu2, mHd2, mu) = getMHParams' cs kHd tanb m0
+    ewsbF m0 = let mH@(mHu2, mHd2, mu) = getMHParams' cs mStar kHd tanb m0
                    b = getB mH tanb
                    mu2 = mu * mu
                in b * b * mu2 - (mHu2 + mu2) * (mHd2 + mu2)
 
 getM0FromDBI :: ModularWeights
+             -> Double            -- ^ m_*
              -> Double            -- ^ kHd
              -> Double            -- ^ the (Delta B)^{-1} value
              -> (Double, Double)  -- ^ (xlow, xup)
              -> Double            -- ^ tan(beta)
              -> Maybe Double
-getM0FromDBI cs kHd dBI range tanb = riddersSolver dBIF range
+getM0FromDBI cs mStar kHd dBI range tanb = riddersSolver dBIF range
   where
-    dBIF m0 = let mH@(mHu2, mHd2, mu) = getMHParams' cs kHd tanb m0
+    dBIF m0 = let mH@(mHu2, mHd2, mu) = getMHParams' cs mStar kHd tanb m0
                   b = getB mH tanb
                   hparams = HiggsParams { _M0      = m0
                                         , _tanbeta = tanb
@@ -188,22 +194,24 @@ deltaB HiggsParams {_tanbeta = tanb, _B = b, _mu = mu} =
 
 -- | obtain M0 from the condition that B = k * M0.
 getM0FromB :: ModularWeights
+           -> Double            -- ^ m_*
            -> Double            -- ^ kHd
            -> Double            -- ^ k of B = k * M0
            -> (Double, Double)  -- ^ (xlow, xup)
            -> Double            -- ^ tan(beta)
            -> Maybe Double
-getM0FromB cs kHd k range tanb = riddersSolver bF range
+getM0FromB cs mStar kHd k range tanb = riddersSolver bF range
   where
-    bF m0 = let b = getB (getMHParams' cs kHd tanb m0) tanb
+    bF m0 = let b = getB (getMHParams' cs mStar kHd tanb m0) tanb
             in b - k * m0
 
 getMuFromHiggs :: ModularWeights
+               -> Double            -- ^ m_*
                -> Mass              -- ^ Higgs mass
                -> (Mass, Mass)      -- ^ (mtMS, mbMS)
                -> Double            -- ^ alpha_s
                -> (Double, Double)  -- ^ (low, upper)
                -> Double            -- ^ tan(beta)
                -> Maybe Double
-getMuFromHiggs cs mh mqMS as range tanb =
-    getMu cs <$> getM0FromHiggs cs mh mqMS as range tanb
+getMuFromHiggs cs mStar mh mqMS as range tanb =
+    getMu cs mStar <$> getM0FromHiggs cs mStar mh mqMS as range tanb

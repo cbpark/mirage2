@@ -1,6 +1,6 @@
 {-# LANGUAGE Strict #-}
 
-module HEP.Util where
+module HEP.Data.Util where
 
 import Numeric.RootFinding
 

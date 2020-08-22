@@ -1,26 +1,27 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
+import           HEP.Data.Interface  (InputArgs (..))
 import           HEP.Data.SUSY
 
 import qualified Data.Vector.Unboxed as U
+import           Options.Generic     (unwrapRecord)
 
 import           Data.Maybe          (fromMaybe)
-import           System.Environment  (getArgs)
 import           System.IO           (IOMode (..), hPutStrLn, withFile)
 import           Text.Printf         (hPrintf)
 
 main :: IO ()
 main = do
-    outfile <- head <$> getArgs
+    input <- unwrapRecord "Calculate M0 from fine-tuning (Delta_B)"
+    let mStar   = msusy input
+        outfile = output input
 
-    -- let tanb = 10
-    --     m0sol = getM0FromDBI point1 0 0.01 (1e+3, 1e+5) tanb
-    -- putStrLn $ "m0sol = " ++ show m0sol
-
-    let kHd = 0
+        kHd = 0
         tanbs = U.enumFromStepN 6.0 0.2 200
         getM0 dBI = fromMaybe 0
-                    . getM0FromDBI point1 kHd dBI (1e+3, 1e+5)
+                    . getM0FromDBI point1 mStar kHd dBI (mStar, 1e+5)
 
         m0s0 = U.map (getM0 0.005) tanbs
         m0s1 = U.map (getM0 0.01 ) tanbs

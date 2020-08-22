@@ -13,8 +13,9 @@ main = do
 
     let tanb = 10.0
         m0 = 4033
+        mStar = 2000.0
 
-    let mu = getMu point1 m0
+    let mu = getMu point1 mStar m0
     putStrLn $ "mu = " ++ show mu
 
     let mtS = mStop point1 tanb m0 mu
@@ -32,16 +33,18 @@ main = do
     a3 <- alphasQ mtMS alphaS
     print a3
 
-    let mh = mHiggs point1 (mtMS, mbMS) a3 tanb m0
+    let mh = mHiggs point1 mStar (mtMS, mbMS) a3 tanb m0
     print mh
 
-    let m0sol = getM0FromHiggs point1 mhSM (mtMS, mbMS) a3 (1e+3, 5e+4) 10
+    let m0sol = getM0FromHiggs point1 mStar
+                mhSM (mtMS, mbMS) a3 (mStar, 5e+4) 10
     putStrLn $ "m0sol (Higgs)= " ++ show m0sol
 
-    let m0sol' = getM0FromStop point1 1000.0 (1e+3, 1e+4) 10
+    let m0sol' = getM0FromStop point1 mStar 1000.0 (1e+3, 1e+4) 10
     putStrLn $ "m0sol (stop) = " ++ show m0sol'
 
-    let mHparams = getMHParams point1 0 mhSM (mtMS, mbMS) a3 (1e+3, 1e+4) tanb
+    let mHparams = getMHParams point1 mStar 0
+                   mhSM (mtMS, mbMS) a3 (mStar, 1e+4) tanb
         dB = deltaB (fromJust mHparams)
     print mHparams
     putStrLn $ "delta B = " ++ show (1.0 / dB)
