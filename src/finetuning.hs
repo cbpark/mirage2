@@ -19,7 +19,7 @@ main = do
         outfile = output input
 
         kHd = 0
-        tanbs = U.enumFromStepN 6.0 0.2 200
+        tanbs = U.enumFromStepN 6.0 0.1 400
         getM0 dBI = fromMaybe 0
                     . getM0FromDBI point1 mStar kHd dBI (mStar, 1e+5)
 

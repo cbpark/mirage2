@@ -20,7 +20,7 @@ main = do
         outfile = output input
 
         mstop = 1000.0
-        tanbs = U.enumFromStepN 6.0 0.2 200
+        tanbs = U.enumFromStepN 6.0 0.1 400
         getM0 = fromMaybe 0 . getM0FromStop point1 mStar mstop (mStar, 1e+5)
 
         m0s = U.map getM0 tanbs

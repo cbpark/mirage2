@@ -28,7 +28,7 @@ main = do
     let mStar   = msusy input
         outfile = output input
 
-        tanbs = U.enumFromStepN 6.0 0.2 200
+        tanbs = U.enumFromStepN 6.0 0.1 400
         getM0 mh = fromMaybe 0
                    . getM0FromHiggs point1 mStar mh (mtMS, mbMS) a3 (mStar, 1e+5)
 

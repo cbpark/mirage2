@@ -19,7 +19,7 @@ main = do
         outfile = output input
 
         kHd = 0
-        tanbs = U.enumFromStepN 6.0 0.2 200
+        tanbs = U.enumFromStepN 6.0 0.1 400
         getM0 k = fromMaybe 0
                   . getM0FromB point1 mStar kHd k (mStar, 1e+5)
 
