@@ -134,7 +134,7 @@ getMHParams' cs mStar kHd tanb m0
                   , mu )
   where
     mHdSq = getMHdSq cs kHd m0
-    mu = getMu cs m0 mStar
+    mu = getMu cs mStar m0
     tanbSq = tanb * tanb
 
 getMHdSq :: ModularWeights

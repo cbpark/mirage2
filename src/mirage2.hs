@@ -40,7 +40,7 @@ main = do
                 mhSM (mtMS, mbMS) a3 (mStar, 5e+4) 10
     putStrLn $ "m0sol (Higgs)= " ++ show m0sol
 
-    let m0sol' = getM0FromStop point1 mStar 1000.0 (1e+3, 1e+4) 10
+    let m0sol' = getM0FromStop point1 mStar 1000.0 (mStar, 1e+4) 10
     putStrLn $ "m0sol (stop) = " ++ show m0sol'
 
     let mHparams = getMHParams point1 mStar 0
