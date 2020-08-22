@@ -10,6 +10,7 @@ stack.yaml.lock
 *.prof
 *.html
 bin
+data
 *.dat
 *.old
 *.gz
