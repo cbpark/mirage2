@@ -24,9 +24,7 @@ library:
   source-dirs: lib
   cxx-sources: csrc/alphas.cc
   cxx-options: -g -O2 -m64 -Wall -Wextra -pedantic -fPIC
-  extra-libraries:
-    - LHAPDF
-    - stdc++
+  extra-libraries: [LHAPDF, stdc++]
   dependencies: math-functions
 
 executables:
@@ -35,50 +33,33 @@ executables:
     source-dirs: src
     dependencies: mirage2
 
-  mhiggs:
-    main: mhiggs.hs
-    source-dirs: src
-    dependencies:
-      - vector
-      - mirage2
-
-  calcm0_higgs:
-    main: calcm0_higgs.hs
-    source-dirs: src
-    dependencies:
-      - vector
-      - mirage2
-
-  calcm0_stop:
-    main: calcm0_stop.hs
-    source-dirs: src
-    dependencies:
-      - vector
-      - mirage2
-
-  calcm0_bmu:
-    main: calcm0_bmu.hs
-    source-dirs: src
-    dependencies:
-      - mirage2
-      - vector
-
-  calcmu_higgs:
-    main: calcmu_higgs.hs
-    source-dirs: src
-    dependencies:
-      - vector
-      - mirage2
-
   ewsb:
     main: ewsb.hs
     source-dirs: src
     dependencies:
       - mirage2
 
-  finetuning:
-    main: finetuning.hs
+  mhiggs: &higgs
+    main: mhiggs.hs
     source-dirs: src
-    dependencies:
-      - mirage2
-      - vector
+    dependencies: [vector, mirage2]
+
+  finetuning:
+    <<: *higgs
+    main: finetuning.hs
+
+  calcm0_higgs:
+    <<: *higgs
+    main: calcm0_higgs.hs
+
+  calcm0_stop:
+    <<: *higgs
+    main: calcm0_stop.hs
+
+  calcm0_bmu:
+    <<: *higgs
+    main: calcm0_bmu.hs
+
+  calcmu_higgs:
+    <<: *higgs
+    main: calcmu_higgs.hs
