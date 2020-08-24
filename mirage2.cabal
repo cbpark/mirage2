@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 28fdb42da5a9d1a21d2d80fd3e91e6f5c0e25d1b6dd3cdf6c197f9c114cb092c
+-- hash: 5f87206bac791d9dfa3ff5737c339df9d24fa12d002944ec5ca244fa33ebf77a
 
 name:           mirage2
 version:        0.0.0.0
@@ -122,8 +122,22 @@ executable ewsb
     , optparse-generic
   default-language: Haskell2010
 
-executable finetuning
-  main-is: finetuning.hs
+executable finetuning_b
+  main-is: finetuning_b.hs
+  other-modules:
+      Paths_mirage2
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  build-depends:
+      base >=4.12.0.0 && <5
+    , mirage2
+    , optparse-generic
+    , vector
+  default-language: Haskell2010
+
+executable finetuning_mu
+  main-is: finetuning_mu.hs
   other-modules:
       Paths_mirage2
   hs-source-dirs:

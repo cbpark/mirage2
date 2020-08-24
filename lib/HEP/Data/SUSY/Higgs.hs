@@ -166,24 +166,34 @@ getM0FromEWSB cs mStar kHd range tanb = riddersSolver ewsbF range
                    mu2 = mu * mu
                in b * b * mu2 - (mHu2 + mu2) * (mHd2 + mu2)
 
-getM0FromDBI :: ModularWeights
+getM0FromFT :: (HiggsParams -> Double)  -- ^ the function to calculate Delta(FT)
+            -> ModularWeights           -- ^ modular weights
+            -> Double                   -- ^ m_*
+            -> Double                   -- ^ kHd
+            -> Double                   -- ^ the Delta^{-1} value
+            -> (Double, Double)         -- ^ (xlow, xup)
+            -> Double                   -- ^ tan(beta)
+            -> Maybe Double
+getM0FromFT deltaF cs mStar kHd delta range tanb = riddersSolver f range
+  where
+    f m0 = let mH@(mHu2, mHd2, mu) = getMHParams' cs mStar kHd tanb m0
+               b = getB mH tanb
+               hparams = HiggsParams { _M0      = m0
+                                     , _tanbeta = tanb
+                                     , _mHu2    = mHu2
+                                     , _mHd2    = mHd2
+                                     , _B       = b
+                                     , _mu      = mu }
+           in (1 / deltaF hparams - delta)
+
+getM0FromFTB :: ModularWeights
              -> Double            -- ^ m_*
              -> Double            -- ^ kHd
-             -> Double            -- ^ the (Delta B)^{-1} value
+             -> Double            -- ^ the (Delta_B)^{-1} value
              -> (Double, Double)  -- ^ (xlow, xup)
              -> Double            -- ^ tan(beta)
              -> Maybe Double
-getM0FromDBI cs mStar kHd dBI range tanb = riddersSolver dBIF range
-  where
-    dBIF m0 = let mH@(mHu2, mHd2, mu) = getMHParams' cs mStar kHd tanb m0
-                  b = getB mH tanb
-                  hparams = HiggsParams { _M0      = m0
-                                        , _tanbeta = tanb
-                                        , _mHu2    = mHu2
-                                        , _mHd2    = mHd2
-                                        , _B       = b
-                                        , _mu      = mu }
-              in (1 / deltaB hparams - dBI)
+getM0FromFTB = getM0FromFT deltaB
 
 deltaB :: HiggsParams -> Double
 deltaB HiggsParams {_tanbeta = tanb, _B = b, _mu = mu} =
@@ -215,3 +225,22 @@ getMuFromHiggs :: ModularWeights
                -> Maybe Double
 getMuFromHiggs cs mStar mh mqMS as range tanb =
     getMu cs mStar <$> getM0FromHiggs cs mStar mh mqMS as range tanb
+
+getM0FromFTMuSq :: ModularWeights
+                -> Double            -- ^ m_*
+                -> Double            -- ^ kHd
+                -> Double            -- ^ the (Delta_Mu^2)^{-1} value
+                -> (Double, Double)  -- ^ (xlow, xup)
+                -> Double            -- ^ tan(beta)
+                -> Maybe Double
+getM0FromFTMuSq = getM0FromFT (abs . deltaMuSq)
+
+deltaMuSq :: HiggsParams -> Double
+deltaMuSq HiggsParams {_tanbeta = tanb, _B = b', _mu = mu'} =
+    - 2 * mu * mu / mZ2
+    + 2 * t2 / (t2 - 1) ** 2 * (1 - 4 * tanb / (t2 + 1) * mu / b)
+    * (1 + (t2 + 1) / tanb * b * mu / mZ2)
+  where
+    t2 = tanb * tanb
+    b = abs b'
+    mu = abs mu'

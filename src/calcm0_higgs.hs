@@ -28,7 +28,7 @@ main = do
     let mStar   = msusy input
         outfile = output input
 
-        tanbs = U.enumFromStepN 6.0 0.1 400
+        tanbs = U.enumFromStepN 6.0 0.05 800
         getM0 mh = fromMaybe 0
                    . getM0FromHiggs point1 mStar mh (mtMS, mbMS) a3 (mStar, 1e+5)
 
@@ -41,7 +41,7 @@ main = do
     withFile outfile WriteMode $ \h -> do
         hPutStrLn h "# tan(beta), M0, M0(lower), M0(upper)"
         U.mapM_ (\(tanb, m0, m1, m2) ->
-                     hPrintf h "%5.1f  %11.4f  %11.4f  %11.4f\n"
+                     hPrintf h "%6.2f  %11.4f  %11.4f  %11.4f\n"
                      tanb m0 m1 m2) result
 
     putStrLn $ "-- " <> outfile <> " generated."

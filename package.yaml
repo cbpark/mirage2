@@ -44,9 +44,13 @@ executables:
     source-dirs: src
     dependencies: [vector, mirage2]
 
-  finetuning:
+  finetuning_b:
     <<: *higgs
-    main: finetuning.hs
+    main: finetuning_b.hs
+
+  finetuning_mu:
+    <<: *higgs
+    main: finetuning_mu.hs
 
   calcm0_higgs:
     <<: *higgs
