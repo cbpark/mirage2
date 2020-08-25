@@ -1,12 +1,15 @@
 module Main where
 
+import HEP.Data.Quark (getMt3)
 import HEP.Data.SUSY
 
 main :: IO ()
 main = do
+    mta3 <- getMt3
+
     let tanb = 10
         mStar = 2000.0
-        m0sol = getM0FromEWSB point1 mStar 0 (mStar, 1e+10) tanb
+        m0sol = getM0FromEWSB point1 mStar mta3 0 (mStar, 1e+10) tanb
     putStrLn $ "m0sol = " ++ show m0sol
 
 point1 :: ModularWeights

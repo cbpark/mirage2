@@ -3,6 +3,7 @@
 module Main where
 
 import           HEP.Data.Interface  (InputArgs (..))
+import           HEP.Data.Quark      (getMt3)
 import           HEP.Data.SUSY       (ModularWeights (..), getM0FromStop)
 
 import qualified Data.Vector.Unboxed as U
@@ -19,9 +20,12 @@ main = do
     let mStar   = msusy input
         outfile = output input
 
-        mstop = 1000.0
+    mta3 <- getMt3
+
+    let mstop = 1000.0
         tanbs = U.enumFromStepN 6.0 0.1 400
-        getM0 = fromMaybe 0 . getM0FromStop point1 mStar mstop (mStar, 1e+5)
+        getM0 = fromMaybe 0
+                . getM0FromStop point1 mStar mta3 mstop (mStar, 1e+5)
 
         m0s = U.map getM0 tanbs
         result = U.zip tanbs m0s

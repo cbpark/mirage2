@@ -5,9 +5,10 @@ module HEP.Data.Quark
     , nLightQ
     , mMSbar
     , mMSbarHeavy
+    , getMt3
     ) where
 
-import HEP.Data.AlphaS        (AlphaS, alphasQ)
+import HEP.Data.AlphaS        (AlphaS, alphasQ, initAlphaS)
 import HEP.Data.Constants     (mb, mc, mt)
 import HEP.Data.Kinematics    (Mass (..))
 
@@ -78,3 +79,11 @@ cAlphaRG aSmu scale
                         ( 7.0/2,  4.0/ 7, 1, 1.139796, 1.79348, -0.683433)
           return . Just $ (a0 * x) ** c0
                           * (b0 + b1 * x + b2 * x ** 2 + b3 * x ** 3)
+
+-- | returns (running top mass, alpha_s(mt(MSbar))).
+getMt3 :: MonadIO m => m (Mass, Double)
+getMt3 = do
+    alphaS <- initAlphaS
+    (mtMS, _, _) <- mMSbarHeavy alphaS mt
+    a3 <- alphasQ mtMS alphaS
+    return (mtMS, a3)

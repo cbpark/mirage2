@@ -3,6 +3,7 @@
 module Main where
 
 import           HEP.Data.Interface  (InputArgs (..))
+import           HEP.Data.Quark      (getMt3)
 import           HEP.Data.SUSY
 
 import qualified Data.Vector.Unboxed as U
@@ -18,10 +19,12 @@ main = do
     let mStar   = msusy input
         outfile = output input
 
-        kHd = 0
+    mta3 <- getMt3
+
+    let kHd = 0
         tanbs = U.enumFromStepN 6.0 0.1 400
         getM0 dBI = fromMaybe 0
-                    . getM0FromFTMuSq point1 mStar kHd dBI (mStar, 1e+5)
+                    . getM0FromFTMuSq point1 mStar mta3 kHd dBI (mStar, 1e+5)
 
         m0s0 = U.map (getM0 0.005) tanbs
         m0s1 = U.map (getM0 0.01 ) tanbs

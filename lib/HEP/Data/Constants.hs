@@ -40,6 +40,10 @@ alphasMZ, sinThetaW2 :: Double
 alphasMZ = 0.118
 sinThetaW2 = 0.23122
 
+b2, b3 :: Double
+b2 = 1.0
+b3 = - 3.0
+
 pi2 :: Double
 pi2 = 9.869604401089358
 

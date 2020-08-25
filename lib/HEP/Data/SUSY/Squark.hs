@@ -58,11 +58,12 @@ getMSUSY2 cs tanb m0 mu = 0.5 * (mst1 * mst1 + mst2 * mst2)
 
 getM0FromStop :: ModularWeights
               -> Double            -- ^ m_*
+              -> (Mass, Double)    -- ^ (mtMS, alpha_s(mtMS))
               -> Double            -- ^ m_{stop}
               -> (Double, Double)  -- ^ (xlow, xup)
               -> Double            -- ^ tan(beta)
               -> Maybe Double
-getM0FromStop cs mStar mstop range tanb = riddersSolver stopF range
+getM0FromStop cs mStar mta3 mstop range tanb = riddersSolver stopF range
   where
-    stopF m0 = let Mass mst1 = fst $ mStop cs tanb m0 (getMu cs mStar m0)
+    stopF m0 = let Mass mst1 = fst $ mStop cs tanb m0 (getMu cs mStar mta3 m0)
                in mstop - mst1
