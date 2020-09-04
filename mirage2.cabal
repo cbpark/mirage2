@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5f87206bac791d9dfa3ff5737c339df9d24fa12d002944ec5ca244fa33ebf77a
+-- hash: 14f3acc679c5ede88e5416be6ff12b618a3cc87c0115cdc1c7a72f55fb2d7bef
 
 name:           mirage2
 version:        0.0.0.0
@@ -40,7 +40,7 @@ library
       Paths_mirage2
   hs-source-dirs:
       lib
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   cxx-options: -g -O2 -m64 -Wall -Wextra -pedantic -fPIC
   cxx-sources:
       csrc/alphas.cc
@@ -59,7 +59,7 @@ executable calcm0_bmu
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -73,7 +73,7 @@ executable calcm0_higgs
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -87,7 +87,7 @@ executable calcm0_stop
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -101,7 +101,7 @@ executable calcmu_higgs
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -115,7 +115,7 @@ executable ewsb
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -128,7 +128,7 @@ executable finetuning_b
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -142,7 +142,7 @@ executable finetuning_mu
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -156,7 +156,7 @@ executable mhiggs
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2
@@ -170,7 +170,7 @@ executable mirage2
       Paths_mirage2
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields
+  ghc-options: -Wall -Wcompat -O2 -funbox-strict-fields -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.12.0.0 && <5
     , mirage2

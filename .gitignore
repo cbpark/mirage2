@@ -6,6 +6,7 @@ cabal.project.local
 .ghc.environment.*
 result
 stack.yaml.lock
+.hie
 .stack-work
 *.prof
 *.html
