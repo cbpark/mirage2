@@ -1,0 +1,123 @@
+-------------------------------------------------
+		   SOFTSUSY
+-------------------------------------------------
+
+INTRODUCTION
+------------
+
+The most recent version of SOFTSUSY and full documentation can be obtained
+from: http://allanach.home.cern.ch/allanach/softsusy.html
+
+This code provides a SUSY spectrum in the MSSM consistent with input low
+energy data, and a user supplied high energy constraint (eg minmal SUGRA). It
+is written in C++ with an emphasis on easy generalisability. Full three-family
+couplings and renormalisation group equations are employed, as well as
+one-loop finite corrections a la Bagger, Matchev, Pierce and Zhang. 
+
+If you use SOFTSUSY to write a paper, please cite B.C. Allanach,
+Comput. Phys. Commun. 143 (2002) 305, hep-ph/0104145, which is the SOFTSUSY
+manual and provides a comparison with 
+the results of other codes. The version on the electronic hep-ph/
+archive will be updated with more recent versions (since 1.2). 
+
+
+FILES INCLUDED IN THIS DISTRIBUTION
+-----------------------------------
+
+mycomplex.cpp
+interface.cpp
+linalg.cpp
+lowe.cpp
+main.cpp
+numerics.cpp
+physpars.cpp
+rge.cpp
+softpars.cpp
+softsusy.cpp
+susy.cpp
+utils.cpp
+mycomplex.h
+def.h
+linalg.h
+lowe.h
+numerics.h
+physpars.h
+rge.h
+softpars.h
+softsusy.h
+susy.h
+twoloophiggs.h
+twoloophiggs.f
+utils.h
+Makefile
+outputTest
+
+
+INSTALLATION
+------------
+
+To run SOFTSUSY, you should only need standard C++ libraries. CERNLIB and
+NAGLIB are not required. The code has been successfully compiled so far using
+g++ on both SUN, DEC ALPHA and PC systems. It is supposed to be standard ANSI
+compatible C++ (and does not contain any templates). 
+
+The following releases contain a test program (main.cpp) and the code for the
+SOFTSUSY library (libsotft.a, link with -lsoft).
+There is also a Makefile: in linux/UNIX, just unpack the files with
+(eg for softsusy1.9):
+> gunzip softsusy1.9.tar.gz 
+> tar -xvf softsusy1.9.tar 
+then type 
+> make
+The C++ test program is then run by 
+> softsusy.x 
+or 
+> softpoint.x (which gives instructions on its use)
+
+EXECTUABLE FILES: AFTER INSTALLATION
+------------------------------------
+    * softpoint.x: command-line interface. GMSB, AMSB, mSUGRA and general
+    boundary conditions possible. 
+    * softsusy.x: example C++ test program - calculates spectrum of SPS1a
+    mSUGRA point. 
+
+INPUT AND INFO FILES
+--------------------
+    * [README] contains installation instructions and a list of included files
+    * [outputTest] is the output from the test program
+    * [lesHouchesInput] is an alternative input file in the SUSY 
+    Les Houches Accord format
+
+SOURCE - a description of each file
+------
+    *  [def.h] contains switches (options) and parameters such as default
+    fermion masses, required accuracy etc 
+    * [main.cpp ] contains a main C++ program to calculate the spectrum of
+    SPS1a point 
+    * [softpoint.cpp ] is the main program for the command line interface 
+    * [mycomplex.cpp | mycomplex.h] contains Complex class - standard complex
+    algebra 
+    * [linalg.cpp | linalg.h] contains Matrix and Vector classes - standard
+    linear algebra and diagonalisation routines 
+    * [lowe.cpp | lowe.h] contains QedQcd class - contains fermion mass data,
+    as well as QED x QCD gauge couplings. Also runs them to 1 loop x 3 loops. 
+    * [numerics.cpp | numerics.h] contains numerical routines - differential
+    equation solver, differentiator and function minimiser 
+    * [rge.cpp | rge.h] a general RGE class - describes how to run an RGE
+    object, and how many parameters the class has (and its scale) and how to
+    access the beta functions etc 
+    * [softsusy.cpp | softsusy.h] the main part of the code. A MssmSoftsusy
+    object contains the low energy data. Also contained are the iterating
+    routines to do the main calculation and radiative corrections etc. 
+    * [softpars.cpp | softpars.h]. A SoftParsMssm objecy contains all soft
+    breaking and SUSY (and physical) parameters, 
+    * [physpars.cpp | physpars.h]. Contains flags for potential problems in
+    sProblem structure, and structure for containing physical MSSM parameters
+    such as pole masses in sPhysical. 
+    * [susy.cpp | susy.h] MssmSusy contains all SUSY couplings and tan beta,
+    as well as their beta functions 
+    * [utils.cpp | utils.h] contains a few handy little mathematical functions
+    * [twoloophiggs.f | twoloophiggs.h] contains the Slavich-et-al two loop
+    Higgs mass/REWSB corrections 
+    * [Makefile]
+

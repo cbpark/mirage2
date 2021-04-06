@@ -1,0 +1,8 @@
+.ccls*
+*.a
+*.o
+*.x
+*.in
+*.out
+outputTest
+*.old*
