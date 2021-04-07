@@ -36,7 +36,7 @@ main = do
     withFile outfile WriteMode $ \h -> do
         hPutStrLn h "# tan(beta), M0(0.1), M0(0.2), M0(0.5), M0(1.0), M(3.0)"
         U.mapM_ (\(tanb, m0, m1, m2, m3, m4) ->
-                     hPrintf h "%5.1f  %11.4f  %11.4f  %11.4f  %11.4f  %11.4f\n"
+                     hPrintf h "%6.2f  %11.4f  %11.4f  %11.4f  %11.4f  %11.4f\n"
                      tanb m0 m1 m2 m3 m4) result
 
     putStrLn $ "-- " <> outfile <> " generated."
