@@ -195,7 +195,7 @@ public:
   void minimalGmsb(int n5, double lambda, double mMess, double cgrav);
 
   /// *** MIRAGE MEDIATION SOFT TERMS ***
-  void mirage(double alphac, double M0, double am, double ah, double cm, double ch);
+  void mirage(double alphac, double M0, double aq, double al, double ahu, double ahd, double cq, double cl, double chu, double chd);
 
   /// Reads in soft SUSY breaking parameters from a file
   void inputSoftParsOnly();

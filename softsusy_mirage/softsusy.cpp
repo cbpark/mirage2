@@ -9943,10 +9943,14 @@ void MssmSoftsusy::lesHouchesAccordOutput(char model[],
   else if (!strcmp(model, "mirage")) {
     cout << "     1   "; printRow(pars.display(1)); cout << "   # alpha" << endl;
     cout << "     2   "; printRow(pars.display(2)); cout << "   # M0" <<endl;
-    cout << "     5   "; printRow(pars.display(3)); cout << "   # am" <<endl;
-    cout << "     6   "; printRow(pars.display(4)); cout << "   # ah" <<endl;
-    cout << "     7   "; printRow(pars.display(5)); cout << "   # cm" <<endl;
-    cout << "     8   "; printRow(pars.display(6)); cout << "   # ch" <<endl;
+    cout << "    51   "; printRow(pars.display(3)); cout << "   # aq" <<endl;
+    cout << "    52   "; printRow(pars.display(4)); cout << "   # al" <<endl;
+    cout << "    61   "; printRow(pars.display(5)); cout << "   # ahd" <<endl;
+    cout << "    62   "; printRow(pars.display(6)); cout << "   # ahu" <<endl;
+    cout << "    71   "; printRow(pars.display(7)); cout << "   # cq" <<endl;
+    cout << "    72   "; printRow(pars.display(8)); cout << "   # cl" <<endl;
+    cout << "    81   "; printRow(pars.display(9)); cout << "   # chd" <<endl;
+    cout << "    82   "; printRow(pars.display(10)); cout << "   # chu" <<endl;
   }
   else if (!strcmp(model, "nonUniversal")) {
     cout << "Block EXTPAR          # non-universal SUSY breaking parameters\n";
@@ -10370,11 +10374,15 @@ void MssmSoftsusy::lesHouchesAccordOutput(char model[],
   }
   else if (!strcmp(model, "mirage")) {
     fout << "     1   "; printRow(fout, pars.display(1)); fout << "   # alphac" << endl;
-    fout << "     2   "; printRow(fout, pars.display(2)) ; fout << "   # M0 " << endl;
-    fout << "     5   "; printRow(fout, pars.display(3)) ; fout << "   # am" << endl;
-    fout << "     6   "; printRow(fout, pars.display(4)); fout << "   # ah" << endl;
-    fout << "     7   "; printRow(fout, pars.display(5)) ; fout << "   # cm" << endl;
-    fout << "     8   "; printRow(fout, pars.display(6)) ; fout << "   # ch" << endl;
+    fout << "     2   "; printRow(fout, pars.display(2)); fout << "   # M0 " << endl;
+    fout << "    51   "; printRow(fout, pars.display(3)); fout << "   # aq" << endl;
+    fout << "    52   "; printRow(fout, pars.display(4)); fout << "   # al" << endl;
+    fout << "    61   "; printRow(fout, pars.display(5)); fout << "   # ahd" << endl;
+    fout << "    62   "; printRow(fout, pars.display(6)); fout << "   # ahu" << endl;
+    fout << "    71   "; printRow(fout, pars.display(7)); fout << "   # cq" << endl;
+    fout << "    72   "; printRow(fout, pars.display(8)); fout << "   # cl" << endl;
+    fout << "    81   "; printRow(fout, pars.display(9)); fout << "   # chd" << endl;
+    fout << "    82   "; printRow(fout, pars.display(10)); fout << "   # chu" << endl;
   }
   else if (!strcmp(model, "nonUniversal")) {
     fout << "Block EXTPAR         # non-universal SUSY breaking parameters\n";
@@ -10728,15 +10736,19 @@ void gmsbBcs(MssmSoftsusy & m, const DoubleVector & inputParameters)
 void userDefinedBcs(MssmSoftsusy & m, const DoubleVector & inputParameters) {
   double alphac = inputParameters.display(1);
   double M0 = inputParameters.display(2);
-  double am = inputParameters.display(3);
-  double ah = inputParameters.display(4);
-  double cm = inputParameters.display(5);
-  double ch = inputParameters.display(6);
+  double aq = inputParameters.display(3);
+  double al = inputParameters.display(4);
+  double ahd = inputParameters.display(5);
+  double ahu = inputParameters.display(6);
+  double cq = inputParameters.display(7);
+  double cl = inputParameters.display(8);
+  double chd = inputParameters.display(9);
+  double chu = inputParameters.display(10);
 
 // Sets the Mirage Mediation model parameters which will be related with the
 // soft scalar masses ,gaugino masses, trilinear scalar coupings.
 // Here the method-mirage is defined in SoftParMssm/softpars.h & softpars.cpp
-  m.mirage(alphac,M0,am,ah,cm,ch);
+  m.mirage(alphac,M0,aq,al,ahu,ahd,cq,cl,chu,chd);
 
   return;
 }

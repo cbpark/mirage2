@@ -1439,7 +1439,12 @@ double m32Func(double m32, void * p) {
 // Boundary conditions to be applied at GUT scale for Mirage Mediation soft terms
 // Coding at 07/05/14 ref: hep-ph/0703163
 
-void SoftParsMssm::mirage(double alphac, double M0, double am, double ah, double cm, double ch) {
+void SoftParsMssm::mirage(double alphac, double M0, double aq, double al, double ahu, double ahd, double cq, double cl, double chu, double chd) {
+    std::cout << "alpha: " << alphac << ", M0: " << M0 << '\n'
+              << "aq: " << aq << ", al: " << al << '\n'
+              << "ahu: " << ahu << ", ahd: " << ahd << '\n'
+              << "cq: " << cq << ", cl:" << cl << '\n'
+              << "chu: " << chu << ", chd: " << chd << '\n';
 
 //    MssmSusy run(displaySusy());
 //  double
@@ -1493,8 +1498,7 @@ void SoftParsMssm::mirage(double alphac, double M0, double am, double ah, double
       status = gsl_root_test_interval(x_lo, x_hi, 0, 0.001);
 
       if (status == GSL_SUCCESS) {
-          // std::cout << "alpha: " << alphac << ", m0: " << M0 << '\n';
-          // std::cout << "m32: " << m32_root << '\n';
+          std::cout << "m32: " << m32_root << '\n';
           break;
       }
   } while (status == GSL_CONTINUE && iter < max_iter);
@@ -1536,17 +1540,17 @@ void SoftParsMssm::mirage(double alphac, double M0, double am, double ah, double
          dgamh2=3.0/2.0*sqr(g2sq) + 99.0/50.0*sqr(g1sq) -3.0*sqr(yt)*bytkklt,
 
          ttgamqp= 16.0/3.0*g3sq + 3.0*g2sq + 1.0/15.0*g1sq,
-         ttgamq3= 16.0/3.0*g3sq + 3.0*g2sq + 1.0/15.0*g1sq - 2.0*(sqr(yt)*(ah+2*am)+sqr(yb)*(ah+2*am)),
+         ttgamq3= 16.0/3.0*g3sq + 3.0*g2sq + 1.0/15.0*g1sq - 2.0*(sqr(yt)*(ahu+2*aq)+sqr(yb)*(ahd+2*aq)),
          ttgamup= 16.0/3.0*g3sq + 16.0/15.0*g1sq,
-         ttgamu3= 16.0/3.0*g3sq + 16.0/15.0*g1sq - 4.0*sqr(yt)*(ah + 2*am),
+         ttgamu3= 16.0/3.0*g3sq + 16.0/15.0*g1sq - 4.0*sqr(yt)*(ahu + 2*aq),
          ttgamdp= 16.0/3.0*g3sq + 4.0/15.0*g1sq,
-         ttgamd3= 16.0/3.0*g3sq + 4.0/15.0*g1sq - 4.0*sqr(yb)*(ah + 2*am),
+         ttgamd3= 16.0/3.0*g3sq + 4.0/15.0*g1sq - 4.0*sqr(yb)*(ahd + 2*aq),
          ttgamlp= 3.0*g2sq + 3.0/5.0*g1sq,
-         ttgaml3= 3.0*g2sq + 3.0/5.0*g1sq - 2*sqr(ytau)*(ah + 2*am),
+         ttgaml3= 3.0*g2sq + 3.0/5.0*g1sq - 2*sqr(ytau)*(ahd + 2*al),
          ttgamep= 12.0/5.0*g1sq,
-         ttgame3= 12.0/5.0*g1sq - 4.0*sqr(ytau)*(ah + 2*am),
-         ttgamh1= 3.0*g2sq + 3.0/5.0*g1sq - 6.0*sqr(yb)*(ah + 2*am) - 2.0*sqr(ytau)*(ah + 2*am),
-         ttgamh2= 3.0*g2sq + 3.0/5.0*g1sq - 6.0*sqr(yt)*(ah + 2*am);
+         ttgame3= 12.0/5.0*g1sq - 4.0*sqr(ytau)*(ahd + 2*al),
+         ttgamh1= 3.0*g2sq + 3.0/5.0*g1sq - 6.0*sqr(yb)*(ahd + 2*aq) - 2.0*sqr(ytau)*(ahd + 2*al),
+         ttgamh2= 3.0*g2sq + 3.0/5.0*g1sq - 6.0*sqr(yt)*(ahu + 2*aq);
 
 
 // SET Gaugino Mass
@@ -1565,31 +1569,31 @@ void SoftParsMssm::mirage(double alphac, double M0, double am, double ah, double
   double mQlsq, mtrsq, mbrsq, mLlsq, mtaursq;
   double mh1sq, mh2sq;
 
-  mqlsq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamqp*alphac
+  mqlsq =sqr(M0)*( cq - log(Mpl/m32)/(16.0*sqr(PI))*ttgamqp*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamqp*sqr(alphac));
-  mursq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamup*alphac
+  mursq =sqr(M0)*( cq - log(Mpl/m32)/(16.0*sqr(PI))*ttgamup*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamup*sqr(alphac));
-  mdrsq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamdp*alphac
+  mdrsq =sqr(M0)*( cq - log(Mpl/m32)/(16.0*sqr(PI))*ttgamdp*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamdp*sqr(alphac));
-  mllsq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamlp*alphac
+  mllsq =sqr(M0)*( cl - log(Mpl/m32)/(16.0*sqr(PI))*ttgamlp*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamlp*sqr(alphac));
-  mersq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamep*alphac
+  mersq =sqr(M0)*( cl - log(Mpl/m32)/(16.0*sqr(PI))*ttgamep*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamep*sqr(alphac));
 
-  mQlsq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamq3*alphac
+  mQlsq =sqr(M0)*( cq - log(Mpl/m32)/(16.0*sqr(PI))*ttgamq3*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamq3*sqr(alphac));
-  mtrsq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamu3*alphac
+  mtrsq =sqr(M0)*( cq - log(Mpl/m32)/(16.0*sqr(PI))*ttgamu3*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamu3*sqr(alphac));
-  mbrsq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgamd3*alphac
+  mbrsq =sqr(M0)*( cq - log(Mpl/m32)/(16.0*sqr(PI))*ttgamd3*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamd3*sqr(alphac));
-  mLlsq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgaml3*alphac
+  mLlsq =sqr(M0)*( cl - log(Mpl/m32)/(16.0*sqr(PI))*ttgaml3*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgaml3*sqr(alphac));
-  mtaursq =sqr(M0)*( cm - log(Mpl/m32)/(16.0*sqr(PI))*ttgame3*alphac
+  mtaursq =sqr(M0)*( cl - log(Mpl/m32)/(16.0*sqr(PI))*ttgame3*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgame3*sqr(alphac));
 
-  mh1sq =sqr(M0)*( ch - log(Mpl/m32)/(16.0*sqr(PI))*ttgamh1*alphac
+  mh1sq =sqr(M0)*( chd - log(Mpl/m32)/(16.0*sqr(PI))*ttgamh1*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamh1*sqr(alphac));
-  mh2sq =sqr(M0)*( ch - log(Mpl/m32)/(16.0*sqr(PI))*ttgamh2*alphac
+  mh2sq =sqr(M0)*( chu - log(Mpl/m32)/(16.0*sqr(PI))*ttgamh2*alphac
                   - sqr(log(Mpl/m32)/(16.0*sqr(PI)))*dgamh2*sqr(alphac));
 
 
@@ -1621,13 +1625,13 @@ void SoftParsMssm::mirage(double alphac, double M0, double am, double ah, double
 
    double Atau,Ab,At,Ae,Ad,Au;
 
-   Atau = -M0*( (ah + 2*am) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gaml3+game3)*alphac);
-   Ab   = -M0*( (ah + 2*am) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gamq3+gamd3)*alphac);
-   At   = -M0*( (ah + 2*am) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh2+gamq3+gamu3)*alphac);
+   Atau = M0*( (ahd + 2*al) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gaml3+game3)*alphac);
+   Ab   = M0*( (ahd + 2*aq) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gamq3+gamd3)*alphac);
+   At   = M0*( (ahu + 2*aq) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh2+gamq3+gamu3)*alphac);
 
-   Ae   = -M0*( (ah + 2*am) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gamlp+gamep)*alphac);
-   Ad   = -M0*( (ah + 2*am) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gamqp+gamdp)*alphac);
-   Au   = -M0*( (ah + 2*am) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh2+gamqp+gamup)*alphac);
+   Ae   = M0*( (ahd + 2*al) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gamlp+gamep)*alphac);
+   Ad   = M0*( (ahd + 2*aq) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh1+gamqp+gamdp)*alphac);
+   Au   = M0*( (ahu + 2*aq) - log(Mpl/m32)/(16.0*sqr(PI))*(gamh2+gamqp+gamup)*alphac);
 
    DoubleMatrix MUA(3,3),MDA(3,3),MEA(3,3);
 

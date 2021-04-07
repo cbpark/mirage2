@@ -295,7 +295,7 @@ void errorCall() {
   ii << "softpoint.x sugra <m0> <m12> <a0> <tanb> <mgut> <sgnMu>\n";
   ii << "softpoint.x amsb <m0> <m32> <tanb> <mgut> <sgnMu>\n";
   ii << "softpoint.x gmsb <n5> <mMess> <lambda> <cgrav> <tanb> <sgnMu> \n";
-  ii << "softpoint.x mirage <alpha> <M0> <tanb> <sgnMu> <am> <ah> <cm> <chu> <chd> <mgut>\n";
+  ii << "softpoint.x mirage <alpha> <M0> <tanb> <sgnMu> <aq> <al> <ahd> <ahu> <cq> <cl> <chd> <chu> <mgut>\n";
   ii << "softpoint.x leshouches < lesHouchesInput \n";
   ii << "where bracketed entries are numerical values.\n";
   ii << "<mgut> denotes the scale at which the SUSY breaking ";
@@ -471,14 +471,19 @@ int main(int argc, char *argv[]) {
         double M0 = atof(argv[3]);
         tanb = atof(argv[4]);
         sgnMu= atoi(argv[5]);
-        double am = atof(argv[6]);
-        double ah = atof(argv[7]);
-        double cm = atof(argv[8]);
-        double ch = atof(argv[9]);
-        mgutGuess = mgutCheck(argv[10], gaugeUnification, ewsbBCscale);
-        pars.setEnd(6);
-        pars(1) = alphac; pars(2) = M0; pars(3) = am; pars(4) = ah;
-        pars(5) = cm; pars(6) = ch;
+        double aq = atof(argv[6]);
+        double al = atof(argv[7]);
+        double ahd = atof(argv[8]);
+        double ahu = atof(argv[9]);
+        double cq = atof(argv[10]);
+        double cl = atof(argv[11]);
+        double chd = atof(argv[12]);
+        double chu = atof(argv[13]);
+        mgutGuess = mgutCheck(argv[14], gaugeUnification, ewsbBCscale);
+        pars.setEnd(10);
+        pars(1) = alphac; pars(2) = M0;
+        pars(3) = aq; pars(4) = al; pars(5) = ahd; pars(6) = ahu;
+        pars(7) = cq; pars(8) = cl; pars(9) = chd; pars(10) = chu;
         r = &m;
       }
       else
@@ -527,7 +532,7 @@ int main(int argc, char *argv[]) {
                   case 3: boundaryCondition = &amsbBcs; pars.setEnd(2); r=&m;
                     modelIdent = "amsb"; r=&m;
                     break;
-                  case 4: boundaryCondition = &userDefinedBcs; pars.setEnd(6); r=&m;
+                  case 4: boundaryCondition = &userDefinedBcs; pars.setEnd(10); r=&m;
                     modelIdent = "mirage"; r=&m;
                     break;
                   default:
@@ -620,6 +625,9 @@ int main(int argc, char *argv[]) {
                      case 7: pars(5) = d; break;
                      case 8: pars(6) = d; break;
                      case 9: pars(7) = d; break;
+                     case 10: pars(8) = d; break;
+                     case 11: pars(9) = d; break;
+                     case 12: pars(10) = d; break;
                      default:
                        ostringstream ii;
                        ii <<"Didn't understand mirage model input"<<i<<endl;
